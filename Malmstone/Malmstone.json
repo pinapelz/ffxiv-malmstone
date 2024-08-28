@@ -2,7 +2,7 @@
   "Author": "pinapelz",
   "Name": "Malmstone Calculator",
   "Punchline": "A PVP Series Malmstones Experience Calculator",
-  "Description": "Calculate how much more PVP you have to play before reaching a certain rank in the current PVP Series",
+  "Description": "Calculate how much more PVP you have to play before reaching a certain rank in the current PVP Series\nUse /pmalm to open the main window",
   "ApplicableVersion": "any",
   "Tags": [
     "pvp",

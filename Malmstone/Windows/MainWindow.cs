@@ -37,6 +37,7 @@ namespace Malmstone.Windows
 
         public override void Draw()
         {
+            if (!IsOpen) return;
             var pvpInfo = PvPService.GetPvPSeriesInfo();
             if (pvpInfo != null)
             {
