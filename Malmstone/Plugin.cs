@@ -77,6 +77,11 @@ public sealed class Plugin : IDalamudPlugin
         if (!int.TryParse(splitArgs[0], out int targetRank))
         {
             if (splitArgs[0] == "next") targetRank = pvpInfo.CurrentSeriesRank + 1;
+            else if (splitArgs[0] == "config")
+            {
+                ToggleConfigUI();
+                return;
+            }
             else return;
 
         }
