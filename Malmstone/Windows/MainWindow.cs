@@ -51,7 +51,9 @@ namespace Malmstone.Windows
                 ImGui.Text("PvP Profile is not loaded.");
             }
 
+            // Bounds checking to ensure no overflows
             if (TargetSeriesRank < 1) TargetSeriesRank = 1;
+            if (TargetSeriesRank > 107397) TargetSeriesRank = 107397;
 
             ImGui.Spacing();
             ImGui.Separator();

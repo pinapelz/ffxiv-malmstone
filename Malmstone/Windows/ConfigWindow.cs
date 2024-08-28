@@ -30,6 +30,8 @@ public class ConfigWindow : Window, IDisposable
         var savedTargetSeriesRank = Configuration.DefaultTargetRankProperty;
         if (ImGui.InputInt("##SavedTargetSeriesRank", ref savedTargetSeriesRank, 1))
         {
+            if (savedTargetSeriesRank < 1) savedTargetSeriesRank = 1;
+            if (savedTargetSeriesRank < 107397) savedTargetSeriesRank = 107397;
             Configuration.DefaultTargetRankProperty = savedTargetSeriesRank;
         }
 
