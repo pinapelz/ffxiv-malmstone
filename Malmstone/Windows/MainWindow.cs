@@ -13,6 +13,12 @@ namespace Malmstone.Windows
         private PvPService PvPService;
         private int TargetSeriesRank;
 
+        // Cache-related fields
+        private int _lastSeriesRank;
+        private int _lastTargetSeriesRank;
+        private int _lastSeriesExperience;
+        private Malmstone.Utils.MalmstoneXPCalculator.XpCalculationResult _cachedXpResult;
+
         public MainWindow(Plugin plugin)
             : base("Malmstone")
         {
@@ -39,28 +45,31 @@ namespace Malmstone.Windows
                 if (pvpInfo.CurrentSeriesRank != pvpInfo.ClaimedSeriesRank)
                 {
                     ImGui.Text("Don't forget to claim your rank rewards!");
-
                 }
                 ImGui.Spacing();
 
                 ImGui.Text("Target Rank:");
                 ImGui.InputInt("##TargetSeriesRank", ref TargetSeriesRank, 1);
-            }
-            else
-            {
-                ImGui.Text("PvP Profile is not loaded.");
-            }
 
-            // Bounds checking to ensure no overflows
-            if (TargetSeriesRank < 1) TargetSeriesRank = 1;
-            if (TargetSeriesRank > 107397) TargetSeriesRank = 107397;
+                // Bounds checking to ensure no overflows
+                if (TargetSeriesRank < 1) TargetSeriesRank = 1;
+                if (TargetSeriesRank > 107397) TargetSeriesRank = 107397;
 
-            ImGui.Spacing();
-            ImGui.Separator();
+                ImGui.Spacing();
+                ImGui.Separator();
 
-            if (pvpInfo != null)
-            {
-                var xpResult = MalmstoneXPCalculator.CalculateXp(pvpInfo.CurrentSeriesRank, TargetSeriesRank, pvpInfo.SeriesExperience);
+                // Only recalculate if the relevant data has changed
+                if (pvpInfo.CurrentSeriesRank != _lastSeriesRank ||
+                    TargetSeriesRank != _lastTargetSeriesRank ||
+                    pvpInfo.SeriesExperience != _lastSeriesExperience)
+                {
+                    _cachedXpResult = MalmstoneXPCalculator.CalculateXp(pvpInfo.CurrentSeriesRank, TargetSeriesRank, pvpInfo.SeriesExperience);
+                    _lastSeriesRank = pvpInfo.CurrentSeriesRank;
+                    _lastTargetSeriesRank = TargetSeriesRank;
+                    _lastSeriesExperience = pvpInfo.SeriesExperience;
+                }
+
+                var xpResult = _cachedXpResult;
 
                 ImGui.Spacing();
                 ImGui.Text($"You have {xpResult.RemainingXp} remaining series EXP to go until you reach rank {xpResult.TargetLevel}");
@@ -99,7 +108,7 @@ namespace Malmstone.Windows
                     ImGui.BulletText($"Take 3rd Place: {xpResult.ActivityCounts["Frontline Lose 3rd"]} times");
                 }
 
-                // Frontlines Section
+                // Frontlines Roulette Section
                 ImGui.TextColored(new Vector4(0.8f, 0.6f, 0.6f, 1f), "Frontlines (Roulette)");
                 ImGui.Spacing();
                 if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Win"))
@@ -129,6 +138,10 @@ namespace Malmstone.Windows
                 {
                     ImGui.BulletText($"Lose: {xpResult.ActivityCounts["Rival Wings Lose"]} times");
                 }
+            }
+            else
+            {
+                ImGui.Text("PvP Profile is not loaded.");
             }
         }
     }
