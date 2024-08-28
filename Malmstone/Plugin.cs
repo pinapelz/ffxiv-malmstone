@@ -69,11 +69,17 @@ public sealed class Plugin : IDalamudPlugin
         }
 
         var splitArgs = args.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (!int.TryParse(splitArgs[0], out int targetRank)) return;
         var specs = new HashSet<string>(splitArgs.Skip(1).Select(spec => spec.ToLower()));
 
         var pvpInfo = PvPService.GetPvPSeriesInfo();
+
         if (pvpInfo == null) return;
+        if (!int.TryParse(splitArgs[0], out int targetRank))
+        {
+            if (splitArgs[0] == "next") targetRank = pvpInfo.CurrentSeriesRank + 1;
+            else return;
+
+        }
 
         if (targetRank < 1)
         {
@@ -104,10 +110,11 @@ public sealed class Plugin : IDalamudPlugin
             includeAll = true;
         }
         var seString = new SeString(new List<Payload>());
+        seString.Append(new TextPayload("[To Rank " + targetRank + "]"));
 
         if (includeAll || specs.Contains("cc"))
         {
-            seString.Append(new TextPayload("Crystalline Conflict:\n"));
+            seString.Append(new TextPayload("\nCrystalline Conflict:\n"));
             seString.Append(new UIForegroundPayload(35));
             seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Win") ? $"Win: {xpResult.ActivityCounts["Crystalline Conflict Win"]} times\n" : ""));
             seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Lose") ? $"Lose: {xpResult.ActivityCounts["Crystalline Conflict Lose"]} times\n" : ""));
@@ -139,8 +146,7 @@ public sealed class Plugin : IDalamudPlugin
             seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Rival Wings Lose") ? $"Lose: {xpResult.ActivityCounts["Rival Wings Lose"]} times\n" : ""));
             seString.Append(UIForegroundPayload.UIForegroundOff);
         }
-
-        Chat.Print(seString);
+        if (seString.Payloads.Count > 0) Chat.Print(seString);
     }
 
 
