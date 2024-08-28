@@ -14,11 +14,11 @@ namespace Malmstone.Windows
         private int TargetSeriesRank;
 
         public MainWindow(Plugin plugin)
-            : base("Malmstone", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
+            : base("Malmstone")
         {
             SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(375, 310),
+                MinimumSize = new Vector2(440, 480),
                 MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
             };
 
