@@ -110,7 +110,7 @@ public sealed class Plugin : IDalamudPlugin
             includeAll = true;
         }
         var seString = new SeString(new List<Payload>());
-        seString.Append(new TextPayload("[To Rank " + targetRank + "]"));
+        seString.Append(new TextPayload("[To Series Level " + targetRank + "]"));
 
         if (includeAll || specs.Contains("cc"))
         {

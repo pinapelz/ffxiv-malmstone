@@ -41,15 +41,15 @@ namespace Malmstone.Windows
             var pvpInfo = PvPService.GetPvPSeriesInfo();
             if (pvpInfo != null)
             {
-                ImGui.Text($"Current Series Rank: {pvpInfo.CurrentSeriesRank}");
-                ImGui.Text($"Current Rank Series Experience: {pvpInfo.SeriesExperience}");
+                ImGui.Text($"Current Series Level: {pvpInfo.CurrentSeriesRank}");
+                ImGui.Text($"Current Level Experience Gained: {pvpInfo.SeriesExperience}");
                 if (pvpInfo.CurrentSeriesRank != pvpInfo.ClaimedSeriesRank)
                 {
                     ImGui.Text("Don't forget to claim your rank rewards!");
                 }
                 ImGui.Spacing();
 
-                ImGui.Text("Target Rank:");
+                ImGui.Text("Target Series Level:");
                 ImGui.InputInt("##TargetSeriesRank", ref TargetSeriesRank, 1);
 
                 // Bounds checking to ensure no overflows
@@ -73,7 +73,7 @@ namespace Malmstone.Windows
                 var xpResult = _cachedXpResult;
 
                 ImGui.Spacing();
-                ImGui.Text($"You have {xpResult.RemainingXp} remaining series EXP to go until you reach rank {xpResult.TargetLevel}");
+                ImGui.Text($"You have {xpResult.RemainingXp} remaining series EXP to go until you reach level {xpResult.TargetLevel}");
 
                 ImGui.Spacing();
                 ImGui.Separator();

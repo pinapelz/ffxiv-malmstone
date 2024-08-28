@@ -26,7 +26,7 @@ public class ConfigWindow : Window, IDisposable
 
     public override void Draw()
     {
-        ImGui.Text("Default Series Rank");
+        ImGui.Text("Default Target Series Level");
         var savedTargetSeriesRank = Configuration.DefaultTargetRankProperty;
         if (ImGui.InputInt("##SavedTargetSeriesRank", ref savedTargetSeriesRank, 1))
         {

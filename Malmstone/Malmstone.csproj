@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <Version>1.0.0.0</Version>
-    <Description>A PVP Series Malmstones Experience Calculator</Description>
+    <Description>A PVP Series Malmstones Level Calculator</Description>
     <PackageProjectUrl>https://github.com/goatcorp/Malmstone</PackageProjectUrl>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
     <IsPackable>false</IsPackable>

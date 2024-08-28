@@ -1,7 +1,7 @@
 # Malmstone Calculator
 <img src="./images/icon.png" alt="Logo" width="120" height="120">
 
-A Dalamud plugin that calculates how much more PVP you have to play to reach your target Malmstone Series Rank.
+A Dalamud plugin that calculates how much more PVP you have to play to reach your target Malmstone Series Level.
 
 For an experimental version, please add my custom plugin repository to Dalamud by following the instructions [here](https://github.com/pinapelz/DalamudPlugins)
 
