@@ -129,9 +129,6 @@ namespace Malmstone.Windows
                 {
                     ImGui.BulletText($"Lose: {xpResult.ActivityCounts["Rival Wings Lose"]} times");
                 }
-
-                ImGui.Spacing();
-                ImGui.Separator();
             }
         }
     }
