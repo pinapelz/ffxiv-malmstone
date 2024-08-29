@@ -5,6 +5,9 @@ A Dalamud plugin that calculates how much more PVP you have to play to reach you
 
 For an experimental version, please add my custom plugin repository to Dalamud by following the instructions [here](https://github.com/pinapelz/DalamudPlugins)
 
-![Screenshot of Malmstone Calculator Plugin Main Window](https://github.com/user-attachments/assets/3df4e459-9c18-4f69-b85a-0a022e399788)
+<div style="display: flex; justify-content: space-between;">
+  <img src="./images/image1.png" alt="Screenshot of Malmstone Calculator Plugin Main Window" style="width: 59%;">
+  <img src="./images/image2.png" alt="Screenshot of Malmstone Calculator Plugin Main Window" style="width: 39%;">
+</div>
 
 Inspired by [belthesar's MalmstoneXPCalculator](https://github.com/belthesar/MalmstoneXPCalculator)
