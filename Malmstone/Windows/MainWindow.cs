@@ -56,6 +56,8 @@ namespace Malmstone.Windows
                 if (TargetSeriesRank < 1) TargetSeriesRank = 1;
                 if (TargetSeriesRank > 107397) TargetSeriesRank = 107397;
 
+                if (TargetSeriesRank <= pvpInfo.CurrentSeriesRank) TargetSeriesRank = pvpInfo.CurrentSeriesRank + 1;
+
                 ImGui.Spacing();
                 ImGui.Separator();
 
@@ -83,11 +85,13 @@ namespace Malmstone.Windows
                 ImGui.Spacing();
                 if (xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Win"))
                 {
-                    ImGui.BulletText($"Win: {xpResult.ActivityCounts["Crystalline Conflict Win"]} times");
+                    var winCount = xpResult.ActivityCounts["Crystalline Conflict Win"];
+                    ImGui.BulletText($"Win: {winCount} " + (winCount == 1 ? "time" : "times"));
                 }
                 if (xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Lose"))
                 {
-                    ImGui.BulletText($"Lose: {xpResult.ActivityCounts["Crystalline Conflict Lose"]} times");
+                    var loseCount = xpResult.ActivityCounts["Crystalline Conflict Lose"];
+                    ImGui.BulletText($"Lose: {loseCount} " + (loseCount == 1 ? "time" : "times"));
                 }
 
                 ImGui.Spacing();
@@ -98,15 +102,18 @@ namespace Malmstone.Windows
                 ImGui.Spacing();
                 if (xpResult.ActivityCounts.ContainsKey("Frontline Win"))
                 {
-                    ImGui.BulletText($"Take 1st Place: {xpResult.ActivityCounts["Frontline Win"]} times");
+                    var frontlineWinCount = xpResult.ActivityCounts["Frontline Win"];
+                    ImGui.BulletText($"Take 1st Place: {frontlineWinCount} " + (frontlineWinCount == 1 ? "time" : "times"));
                 }
                 if (xpResult.ActivityCounts.ContainsKey("Frontline Lose 2nd"))
                 {
-                    ImGui.BulletText($"Take 2nd Place: {xpResult.ActivityCounts["Frontline Lose 2nd"]} times");
+                    var frontlineLose2ndCount = xpResult.ActivityCounts["Frontline Lose 2nd"];
+                    ImGui.BulletText($"Take 2nd Place: {frontlineLose2ndCount} " + (frontlineLose2ndCount == 1 ? "time" : "times"));
                 }
                 if (xpResult.ActivityCounts.ContainsKey("Frontline Lose 3rd"))
                 {
-                    ImGui.BulletText($"Take 3rd Place: {xpResult.ActivityCounts["Frontline Lose 3rd"]} times");
+                    var frontlineLose3rdCount = xpResult.ActivityCounts["Frontline Lose 3rd"];
+                    ImGui.BulletText($"Take 3rd Place: {frontlineLose3rdCount} " + (frontlineLose3rdCount == 1 ? "time" : "times"));
                 }
 
                 // Frontlines Roulette Section
@@ -114,15 +121,18 @@ namespace Malmstone.Windows
                 ImGui.Spacing();
                 if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Win"))
                 {
-                    ImGui.BulletText($"Take 1st Place: {xpResult.ActivityCounts["Frontline Daily Win"]} times");
+                    var frontlineDailyWinCount = xpResult.ActivityCounts["Frontline Daily Win"];
+                    ImGui.BulletText($"Take 1st Place: {frontlineDailyWinCount} " + (frontlineDailyWinCount == 1 ? "time" : "times"));
                 }
                 if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Lose 2nd"))
                 {
-                    ImGui.BulletText($"Take 2nd Place: {xpResult.ActivityCounts["Frontline Daily Lose 2nd"]} times");
+                    var frontlineDailyLose2ndCount = xpResult.ActivityCounts["Frontline Daily Lose 2nd"];
+                    ImGui.BulletText($"Take 2nd Place: {frontlineDailyLose2ndCount} " + (frontlineDailyLose2ndCount == 1 ? "time" : "times"));
                 }
                 if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Lose 3rd"))
                 {
-                    ImGui.BulletText($"Take 3rd Place: {xpResult.ActivityCounts["Frontline Daily Lose 3rd"]} times");
+                    var frontlineDailyLose3rdCount = xpResult.ActivityCounts["Frontline Daily Lose 3rd"];
+                    ImGui.BulletText($"Take 3rd Place: {frontlineDailyLose3rdCount} " + (frontlineDailyLose3rdCount == 1 ? "time" : "times"));
                 }
 
                 ImGui.Spacing();
@@ -133,12 +143,15 @@ namespace Malmstone.Windows
                 ImGui.Spacing();
                 if (xpResult.ActivityCounts.ContainsKey("Rival Wings Win"))
                 {
-                    ImGui.BulletText($"Win: {xpResult.ActivityCounts["Rival Wings Win"]} times");
+                    var rivalWingsWinCount = xpResult.ActivityCounts["Rival Wings Win"];
+                    ImGui.BulletText($"Win: {rivalWingsWinCount} " + (rivalWingsWinCount == 1 ? "time" : "times"));
                 }
                 if (xpResult.ActivityCounts.ContainsKey("Rival Wings Lose"))
                 {
-                    ImGui.BulletText($"Lose: {xpResult.ActivityCounts["Rival Wings Lose"]} times");
+                    var rivalWingsLoseCount = xpResult.ActivityCounts["Rival Wings Lose"];
+                    ImGui.BulletText($"Lose: {rivalWingsLoseCount} " + (rivalWingsLoseCount == 1 ? "time" : "times"));
                 }
+
             }
             else
             {

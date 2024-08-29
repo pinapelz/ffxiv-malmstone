@@ -85,6 +85,8 @@ public sealed class Plugin : IDalamudPlugin
             else return;
 
         }
+        // Show games left in chat log when there are args
+
 
         if (targetRank < 1)
         {
@@ -115,42 +117,86 @@ public sealed class Plugin : IDalamudPlugin
             includeAll = true;
         }
         var seString = new SeString(new List<Payload>());
-        seString.Append(new TextPayload("[To Series Level " + targetRank + "]"));
+        seString.Append(new TextPayload("\n[To Series Level " + targetRank + "]"));
 
+        // Crystalline Conflict
         if (includeAll || specs.Contains("cc"))
         {
             seString.Append(new TextPayload("\nCrystalline Conflict:\n"));
             seString.Append(new UIForegroundPayload(35));
-            seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Win") ? $"Win: {xpResult.ActivityCounts["Crystalline Conflict Win"]} times\n" : ""));
-            seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Lose") ? $"Lose: {xpResult.ActivityCounts["Crystalline Conflict Lose"]} times\n" : ""));
+            if (xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Win"))
+            {
+                var winCount = xpResult.ActivityCounts["Crystalline Conflict Win"];
+                seString.Append(new TextPayload($"Win: {winCount} " + (winCount == 1 ? "time" : "times") + "\n"));
+            }
+            if (xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Lose"))
+            {
+                var loseCount = xpResult.ActivityCounts["Crystalline Conflict Lose"];
+                seString.Append(new TextPayload($"Lose: {loseCount} " + (loseCount == 1 ? "time" : "times") + "\n"));
+            }
             seString.Append(UIForegroundPayload.UIForegroundOff);
         }
 
+        //Frontlines
         if (includeAll || specs.Contains("fl"))
         {
             seString.Append(new TextPayload("\nFrontlines:\n"));
             seString.Append(new UIForegroundPayload(518));
-            seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Frontline Win") ? $"Take 1st Place: {xpResult.ActivityCounts["Frontline Win"]} times\n" : ""));
-            seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Frontline Lose 2nd") ? $"Take 2nd Place: {xpResult.ActivityCounts["Frontline Lose 2nd"]} times\n" : ""));
-            seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Frontline Lose 3rd") ? $"Take 3rd Place: {xpResult.ActivityCounts["Frontline Lose 3rd"]} times\n" : ""));
+            if (xpResult.ActivityCounts.ContainsKey("Frontline Win"))
+            {
+                var frontlineWinCount = xpResult.ActivityCounts["Frontline Win"];
+                seString.Append(new TextPayload($"Take 1st Place: {frontlineWinCount} " + (frontlineWinCount == 1 ? "time" : "times") + "\n"));
+            }
+            if (xpResult.ActivityCounts.ContainsKey("Frontline Lose 2nd"))
+            {
+                var frontlineLose2ndCount = xpResult.ActivityCounts["Frontline Lose 2nd"];
+                seString.Append(new TextPayload($"Take 2nd Place: {frontlineLose2ndCount} " + (frontlineLose2ndCount == 1 ? "time" : "times") + "\n"));
+            }
+            if (xpResult.ActivityCounts.ContainsKey("Frontline Lose 3rd"))
+            {
+                var frontlineLose3rdCount = xpResult.ActivityCounts["Frontline Lose 3rd"];
+                seString.Append(new TextPayload($"Take 3rd Place: {frontlineLose3rdCount} " + (frontlineLose3rdCount == 1 ? "time" : "times") + "\n"));
+            }
             seString.Append(UIForegroundPayload.UIForegroundOff);
 
             seString.Append(new TextPayload("\nFrontlines (Roulette):\n"));
             seString.Append(new UIForegroundPayload(518));
-            seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Frontline Daily Win") ? $"Take 1st Place: {xpResult.ActivityCounts["Frontline Daily Win"]} times\n" : ""));
-            seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Frontline Daily Lose 2nd") ? $"Take 2nd Place: {xpResult.ActivityCounts["Frontline Daily Lose 2nd"]} times\n" : ""));
-            seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Frontline Daily Lose 3rd") ? $"Take 3rd Place: {xpResult.ActivityCounts["Frontline Daily Lose 3rd"]} times\n" : ""));
+            if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Win"))
+            {
+                var frontlineDailyWinCount = xpResult.ActivityCounts["Frontline Daily Win"];
+                seString.Append(new TextPayload($"Take 1st Place: {frontlineDailyWinCount} " + (frontlineDailyWinCount == 1 ? "time" : "times") + "\n"));
+            }
+            if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Lose 2nd"))
+            {
+                var frontlineDailyLose2ndCount = xpResult.ActivityCounts["Frontline Daily Lose 2nd"];
+                seString.Append(new TextPayload($"Take 2nd Place: {frontlineDailyLose2ndCount} " + (frontlineDailyLose2ndCount == 1 ? "time" : "times") + "\n"));
+            }
+            if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Lose 3rd"))
+            {
+                var frontlineDailyLose3rdCount = xpResult.ActivityCounts["Frontline Daily Lose 3rd"];
+                seString.Append(new TextPayload($"Take 3rd Place: {frontlineDailyLose3rdCount} " + (frontlineDailyLose3rdCount == 1 ? "time" : "times") + "\n"));
+            }
             seString.Append(UIForegroundPayload.UIForegroundOff);
         }
 
+        // Rival Wings
         if (includeAll || specs.Contains("rw"))
         {
             seString.Append(new TextPayload("\nRival Wings:\n"));
             seString.Append(new UIForegroundPayload(43));
-            seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Rival Wings Win") ? $"Win: {xpResult.ActivityCounts["Rival Wings Win"]} times\n" : ""));
-            seString.Append(new TextPayload(xpResult.ActivityCounts.ContainsKey("Rival Wings Lose") ? $"Lose: {xpResult.ActivityCounts["Rival Wings Lose"]} times\n" : ""));
+            if (xpResult.ActivityCounts.ContainsKey("Rival Wings Win"))
+            {
+                var rivalWingsWinCount = xpResult.ActivityCounts["Rival Wings Win"];
+                seString.Append(new TextPayload($"Win: {rivalWingsWinCount} " + (rivalWingsWinCount == 1 ? "time" : "times") + "\n"));
+            }
+            if (xpResult.ActivityCounts.ContainsKey("Rival Wings Lose"))
+            {
+                var rivalWingsLoseCount = xpResult.ActivityCounts["Rival Wings Lose"];
+                seString.Append(new TextPayload($"Lose: {rivalWingsLoseCount} " + (rivalWingsLoseCount == 1 ? "time" : "times") + "\n"));
+            }
             seString.Append(UIForegroundPayload.UIForegroundOff);
         }
+
         if (seString.Payloads.Count > 0) Chat.Print(seString);
     }
 
