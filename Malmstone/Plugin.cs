@@ -10,6 +10,8 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Collections.Generic;
 using System.Linq;
+using Malmstone.Utils;
+
 namespace Malmstone;
 
 public sealed class Plugin : IDalamudPlugin
@@ -17,7 +19,6 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
-
     [PluginService] internal static IChatGui Chat { get; private set; } = null!;
 
     private const string CommandName = "/pmalm";
@@ -60,145 +61,149 @@ public sealed class Plugin : IDalamudPlugin
         CommandManager.RemoveHandler(CommandName);
     }
 
-    private void OnCommand(string command, string args)
+private void OnCommand(string command, string args)
+{
+    if (string.IsNullOrWhiteSpace(args))
     {
-        if (string.IsNullOrWhiteSpace(args))
-        {
-            ToggleMainUI();
-            return;
-        }
-
-        var splitArgs = args.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        var specs = new HashSet<string>(splitArgs.Skip(1).Select(spec => spec.ToLower()));
-
-        var pvpInfo = PvPService.GetPvPSeriesInfo();
-
-        if (pvpInfo == null) return;
-        if (!int.TryParse(splitArgs[0], out int targetRank))
-        {
-            if (splitArgs[0] == "next") targetRank = pvpInfo.CurrentSeriesRank + 1;
-            else if (splitArgs[0] == "config")
-            {
-                ToggleConfigUI();
-                return;
-            }
-            else return;
-
-        }
-        // Show games left in chat log when there are args
-
-
-        if (targetRank < 1)
-        {
-            Chat.PrintError("Can't have a target rank less than 1");
-            return;
-        }
-
-        if (targetRank > 107397)
-        {
-            Chat.PrintError("Can't have a target rank greater than 107397 (are you really gonna be able to reach that anyways?)");
-            return;
-        }
-
-        if (targetRank < pvpInfo.CurrentSeriesRank)
-        {
-            Chat.PrintError("You've already surpassed Rank " + targetRank);
-            return;
-        }
-
-        var xpResult = Malmstone.Utils.MalmstoneXPCalculator.CalculateXp(
-            pvpInfo.CurrentSeriesRank,
-            targetRank,
-            pvpInfo.SeriesExperience);
-
-        bool includeAll = specs.Contains("all");
-        if (!specs.Any())
-        {
-            includeAll = true;
-        }
-        var seString = new SeString(new List<Payload>());
-        seString.Append(new TextPayload("\n[To Series Level " + targetRank + "]"));
-
-        // Crystalline Conflict
-        if (includeAll || specs.Contains("cc"))
-        {
-            seString.Append(new TextPayload("\nCrystalline Conflict:\n"));
-            seString.Append(new UIForegroundPayload(35));
-            if (xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Win"))
-            {
-                var winCount = xpResult.ActivityCounts["Crystalline Conflict Win"];
-                seString.Append(new TextPayload($"Win: {winCount} " + (winCount == 1 ? "time" : "times") + "\n"));
-            }
-            if (xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Lose"))
-            {
-                var loseCount = xpResult.ActivityCounts["Crystalline Conflict Lose"];
-                seString.Append(new TextPayload($"Lose: {loseCount} " + (loseCount == 1 ? "time" : "times") + "\n"));
-            }
-            seString.Append(UIForegroundPayload.UIForegroundOff);
-        }
-
-        //Frontlines
-        if (includeAll || specs.Contains("fl"))
-        {
-            seString.Append(new TextPayload("\nFrontlines:\n"));
-            seString.Append(new UIForegroundPayload(518));
-            if (xpResult.ActivityCounts.ContainsKey("Frontline Win"))
-            {
-                var frontlineWinCount = xpResult.ActivityCounts["Frontline Win"];
-                seString.Append(new TextPayload($"Take 1st Place: {frontlineWinCount} " + (frontlineWinCount == 1 ? "time" : "times") + "\n"));
-            }
-            if (xpResult.ActivityCounts.ContainsKey("Frontline Lose 2nd"))
-            {
-                var frontlineLose2ndCount = xpResult.ActivityCounts["Frontline Lose 2nd"];
-                seString.Append(new TextPayload($"Take 2nd Place: {frontlineLose2ndCount} " + (frontlineLose2ndCount == 1 ? "time" : "times") + "\n"));
-            }
-            if (xpResult.ActivityCounts.ContainsKey("Frontline Lose 3rd"))
-            {
-                var frontlineLose3rdCount = xpResult.ActivityCounts["Frontline Lose 3rd"];
-                seString.Append(new TextPayload($"Take 3rd Place: {frontlineLose3rdCount} " + (frontlineLose3rdCount == 1 ? "time" : "times") + "\n"));
-            }
-            seString.Append(UIForegroundPayload.UIForegroundOff);
-
-            seString.Append(new TextPayload("\nFrontlines (Roulette):\n"));
-            seString.Append(new UIForegroundPayload(518));
-            if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Win"))
-            {
-                var frontlineDailyWinCount = xpResult.ActivityCounts["Frontline Daily Win"];
-                seString.Append(new TextPayload($"Take 1st Place: {frontlineDailyWinCount} " + (frontlineDailyWinCount == 1 ? "time" : "times") + "\n"));
-            }
-            if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Lose 2nd"))
-            {
-                var frontlineDailyLose2ndCount = xpResult.ActivityCounts["Frontline Daily Lose 2nd"];
-                seString.Append(new TextPayload($"Take 2nd Place: {frontlineDailyLose2ndCount} " + (frontlineDailyLose2ndCount == 1 ? "time" : "times") + "\n"));
-            }
-            if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Lose 3rd"))
-            {
-                var frontlineDailyLose3rdCount = xpResult.ActivityCounts["Frontline Daily Lose 3rd"];
-                seString.Append(new TextPayload($"Take 3rd Place: {frontlineDailyLose3rdCount} " + (frontlineDailyLose3rdCount == 1 ? "time" : "times") + "\n"));
-            }
-            seString.Append(UIForegroundPayload.UIForegroundOff);
-        }
-
-        // Rival Wings
-        if (includeAll || specs.Contains("rw"))
-        {
-            seString.Append(new TextPayload("\nRival Wings:\n"));
-            seString.Append(new UIForegroundPayload(43));
-            if (xpResult.ActivityCounts.ContainsKey("Rival Wings Win"))
-            {
-                var rivalWingsWinCount = xpResult.ActivityCounts["Rival Wings Win"];
-                seString.Append(new TextPayload($"Win: {rivalWingsWinCount} " + (rivalWingsWinCount == 1 ? "time" : "times") + "\n"));
-            }
-            if (xpResult.ActivityCounts.ContainsKey("Rival Wings Lose"))
-            {
-                var rivalWingsLoseCount = xpResult.ActivityCounts["Rival Wings Lose"];
-                seString.Append(new TextPayload($"Lose: {rivalWingsLoseCount} " + (rivalWingsLoseCount == 1 ? "time" : "times") + "\n"));
-            }
-            seString.Append(UIForegroundPayload.UIForegroundOff);
-        }
-
-        if (seString.Payloads.Count > 0) Chat.Print(seString);
+        ToggleMainUI();
+        return;
     }
+
+    var splitArgs = args.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+    var specs = new HashSet<string>(splitArgs.Skip(1).Select(spec => spec.ToLower()));
+
+    var pvpInfo = PvPService.GetPvPSeriesInfo();
+
+    if (pvpInfo == null) return;
+    if (!int.TryParse(splitArgs[0], out int targetRank))
+    {
+        if (splitArgs[0] == "next") targetRank = pvpInfo.CurrentSeriesRank + 1;
+        else if (splitArgs[0] == "config")
+        {
+            ToggleConfigUI();
+            return;
+        }
+        else return;
+
+    }
+    // Show games left in chat log when there are args
+
+    if (targetRank < 1)
+    {
+        Chat.PrintError("Can't have a target rank less than 1");
+        return;
+    }
+
+    if (targetRank > 107397)
+    {
+        Chat.PrintError("Can't have a target rank greater than 107397 (are you really gonna be able to reach that anyways?)");
+        return;
+    }
+
+    if (targetRank < pvpInfo.CurrentSeriesRank)
+    {
+        Chat.PrintError("You've already surpassed Rank " + targetRank);
+        return;
+    }
+
+    var xpResult = MalmstoneXPCalculator.CalculateXp(
+        pvpInfo.CurrentSeriesRank,
+        targetRank,
+        pvpInfo.SeriesExperience);
+
+    bool includeAll = specs.Contains("all");
+    if (!specs.Any())
+    {
+        includeAll = true;
+    }
+    var seString = new SeString(new List<Payload>());
+    seString.Append(new TextPayload("\n[To Series Level " + targetRank + "]"));
+
+    // Crystalline Conflict
+    if (includeAll || specs.Contains("cc"))
+    {
+        seString.Append(new TextPayload("\nCrystalline Conflict:\n"));
+        seString.Append(new UIForegroundPayload(35));
+
+        if (xpResult.CrystallineConflictWin > 0)
+        {
+            seString.Append(new TextPayload($"Win: {xpResult.CrystallineConflictWin} " + (xpResult.CrystallineConflictWin == 1 ? "time" : "times") + "\n"));
+        }
+
+        if (xpResult.CrystallineConflictLose > 0)
+        {
+            seString.Append(new TextPayload($"Lose: {xpResult.CrystallineConflictLose} " + (xpResult.CrystallineConflictLose == 1 ? "time" : "times") + "\n"));
+        }
+
+        seString.Append(UIForegroundPayload.UIForegroundOff);
+    }
+
+    //Frontlines
+    if (includeAll || specs.Contains("fl"))
+    {
+        seString.Append(new TextPayload("\nFrontlines:\n"));
+        seString.Append(new UIForegroundPayload(518));
+
+        if (xpResult.FrontlineWin > 0)
+        {
+            seString.Append(new TextPayload($"Take 1st Place: {xpResult.FrontlineWin} " + (xpResult.FrontlineWin == 1 ? "time" : "times") + "\n"));
+        }
+
+        if (xpResult.FrontlineLose2nd > 0)
+        {
+            seString.Append(new TextPayload($"Take 2nd Place: {xpResult.FrontlineLose2nd} " + (xpResult.FrontlineLose2nd == 1 ? "time" : "times") + "\n"));
+        }
+
+        if (xpResult.FrontlineLose3rd > 0)
+        {
+            seString.Append(new TextPayload($"Take 3rd Place: {xpResult.FrontlineLose3rd} " + (xpResult.FrontlineLose3rd == 1 ? "time" : "times") + "\n"));
+        }
+
+        seString.Append(UIForegroundPayload.UIForegroundOff);
+
+        seString.Append(new TextPayload("\nFrontlines (Roulette):\n"));
+        seString.Append(new UIForegroundPayload(518));
+
+        if (xpResult.FrontlineDailyWin > 0)
+        {
+            seString.Append(new TextPayload($"Take 1st Place: {xpResult.FrontlineDailyWin} " + (xpResult.FrontlineDailyWin == 1 ? "time" : "times") + "\n"));
+        }
+
+        if (xpResult.FrontlineDailyLose2nd > 0)
+        {
+            seString.Append(new TextPayload($"Take 2nd Place: {xpResult.FrontlineDailyLose2nd} " + (xpResult.FrontlineDailyLose2nd == 1 ? "time" : "times") + "\n"));
+        }
+
+        if (xpResult.FrontlineDailyLose3rd > 0)
+        {
+            seString.Append(new TextPayload($"Take 3rd Place: {xpResult.FrontlineDailyLose3rd} " + (xpResult.FrontlineDailyLose3rd == 1 ? "time" : "times") + "\n"));
+        }
+
+        seString.Append(UIForegroundPayload.UIForegroundOff);
+    }
+
+    // Rival Wings
+    if (includeAll || specs.Contains("rw"))
+    {
+        seString.Append(new TextPayload("\nRival Wings:\n"));
+        seString.Append(new UIForegroundPayload(43));
+
+        if (xpResult.RivalWingsWin > 0)
+        {
+            seString.Append(new TextPayload($"Win: {xpResult.RivalWingsWin} " + (xpResult.RivalWingsWin == 1 ? "time" : "times") + "\n"));
+        }
+
+        if (xpResult.RivalWingsLose > 0)
+        {
+            seString.Append(new TextPayload($"Lose: {xpResult.RivalWingsLose} " + (xpResult.RivalWingsLose == 1 ? "time" : "times") + "\n"));
+        }
+
+        seString.Append(UIForegroundPayload.UIForegroundOff);
+    }
+
+    if (seString.Payloads.Count > 0) Chat.Print(seString);
+}
+
 
 
     private void DrawUI() => WindowSystem.Draw();

@@ -17,7 +17,7 @@ namespace Malmstone.Windows
         private int _lastSeriesRank;
         private int _lastTargetSeriesRank;
         private int _lastSeriesExperience;
-        private Malmstone.Utils.MalmstoneXPCalculator.XpCalculationResult _cachedXpResult;
+        private MalmstoneXPCalculator.XpCalculationResult _cachedXpResult;
 
         public MainWindow(Plugin plugin)
             : base("Malmstone")
@@ -42,7 +42,7 @@ namespace Malmstone.Windows
             if (pvpInfo != null)
             {
                 ImGui.Text($"Current Series Level: {pvpInfo.CurrentSeriesRank}");
-                ImGui.Text($"Current Level Experience Gained: {pvpInfo.SeriesExperience}");
+                ImGui.Text($"Current Level Experience Progress: {pvpInfo.SeriesExperience} XP");
                 if (pvpInfo.CurrentSeriesRank != pvpInfo.ClaimedSeriesRank)
                 {
                     ImGui.Text("Don't forget to claim your rank rewards!");
@@ -83,16 +83,8 @@ namespace Malmstone.Windows
                 // Crystalline Conflict Section
                 ImGui.TextColored(new Vector4(0.6f, 0.8f, 1f, 1f), "Crystalline Conflict");
                 ImGui.Spacing();
-                if (xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Win"))
-                {
-                    var winCount = xpResult.ActivityCounts["Crystalline Conflict Win"];
-                    ImGui.BulletText($"Win: {winCount} " + (winCount == 1 ? "time" : "times"));
-                }
-                if (xpResult.ActivityCounts.ContainsKey("Crystalline Conflict Lose"))
-                {
-                    var loseCount = xpResult.ActivityCounts["Crystalline Conflict Lose"];
-                    ImGui.BulletText($"Lose: {loseCount} " + (loseCount == 1 ? "time" : "times"));
-                }
+                ImGui.BulletText($"Win: {xpResult.CrystallineConflictWin} " + (xpResult.CrystallineConflictWin == 1 ? "time" : "times"));
+                ImGui.BulletText($"Lose: {xpResult.CrystallineConflictLose} " + (xpResult.CrystallineConflictLose == 1 ? "time" : "times"));
 
                 ImGui.Spacing();
                 ImGui.Separator();
@@ -100,40 +92,16 @@ namespace Malmstone.Windows
                 // Frontlines Section
                 ImGui.TextColored(new Vector4(0.8f, 0.6f, 0.6f, 1f), "Frontlines");
                 ImGui.Spacing();
-                if (xpResult.ActivityCounts.ContainsKey("Frontline Win"))
-                {
-                    var frontlineWinCount = xpResult.ActivityCounts["Frontline Win"];
-                    ImGui.BulletText($"Take 1st Place: {frontlineWinCount} " + (frontlineWinCount == 1 ? "time" : "times"));
-                }
-                if (xpResult.ActivityCounts.ContainsKey("Frontline Lose 2nd"))
-                {
-                    var frontlineLose2ndCount = xpResult.ActivityCounts["Frontline Lose 2nd"];
-                    ImGui.BulletText($"Take 2nd Place: {frontlineLose2ndCount} " + (frontlineLose2ndCount == 1 ? "time" : "times"));
-                }
-                if (xpResult.ActivityCounts.ContainsKey("Frontline Lose 3rd"))
-                {
-                    var frontlineLose3rdCount = xpResult.ActivityCounts["Frontline Lose 3rd"];
-                    ImGui.BulletText($"Take 3rd Place: {frontlineLose3rdCount} " + (frontlineLose3rdCount == 1 ? "time" : "times"));
-                }
+                ImGui.BulletText($"Take 1st Place: {xpResult.FrontlineWin} " + (xpResult.FrontlineWin == 1 ? "time" : "times"));
+                ImGui.BulletText($"Take 2nd Place: {xpResult.FrontlineLose2nd} " + (xpResult.FrontlineLose2nd == 1 ? "time" : "times"));
+                ImGui.BulletText($"Take 3rd Place: {xpResult.FrontlineLose3rd} " + (xpResult.FrontlineLose3rd == 1 ? "time" : "times"));
 
                 // Frontlines Roulette Section
                 ImGui.TextColored(new Vector4(0.8f, 0.6f, 0.6f, 1f), "Frontlines (Roulette)");
                 ImGui.Spacing();
-                if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Win"))
-                {
-                    var frontlineDailyWinCount = xpResult.ActivityCounts["Frontline Daily Win"];
-                    ImGui.BulletText($"Take 1st Place: {frontlineDailyWinCount} " + (frontlineDailyWinCount == 1 ? "time" : "times"));
-                }
-                if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Lose 2nd"))
-                {
-                    var frontlineDailyLose2ndCount = xpResult.ActivityCounts["Frontline Daily Lose 2nd"];
-                    ImGui.BulletText($"Take 2nd Place: {frontlineDailyLose2ndCount} " + (frontlineDailyLose2ndCount == 1 ? "time" : "times"));
-                }
-                if (xpResult.ActivityCounts.ContainsKey("Frontline Daily Lose 3rd"))
-                {
-                    var frontlineDailyLose3rdCount = xpResult.ActivityCounts["Frontline Daily Lose 3rd"];
-                    ImGui.BulletText($"Take 3rd Place: {frontlineDailyLose3rdCount} " + (frontlineDailyLose3rdCount == 1 ? "time" : "times"));
-                }
+                ImGui.BulletText($"Take 1st Place: {xpResult.FrontlineDailyWin} " + (xpResult.FrontlineDailyWin == 1 ? "time" : "times"));
+                ImGui.BulletText($"Take 2nd Place: {xpResult.FrontlineDailyLose2nd} " + (xpResult.FrontlineDailyLose2nd == 1 ? "time" : "times"));
+                ImGui.BulletText($"Take 3rd Place: {xpResult.FrontlineDailyLose3rd} " + (xpResult.FrontlineDailyLose3rd == 1 ? "time" : "times"));
 
                 ImGui.Spacing();
                 ImGui.Separator();
@@ -141,22 +109,14 @@ namespace Malmstone.Windows
                 // Rival Wings Section
                 ImGui.TextColored(new Vector4(0.6f, 0.8f, 0.6f, 1f), "Rival Wings");
                 ImGui.Spacing();
-                if (xpResult.ActivityCounts.ContainsKey("Rival Wings Win"))
-                {
-                    var rivalWingsWinCount = xpResult.ActivityCounts["Rival Wings Win"];
-                    ImGui.BulletText($"Win: {rivalWingsWinCount} " + (rivalWingsWinCount == 1 ? "time" : "times"));
-                }
-                if (xpResult.ActivityCounts.ContainsKey("Rival Wings Lose"))
-                {
-                    var rivalWingsLoseCount = xpResult.ActivityCounts["Rival Wings Lose"];
-                    ImGui.BulletText($"Lose: {rivalWingsLoseCount} " + (rivalWingsLoseCount == 1 ? "time" : "times"));
-                }
-
+                ImGui.BulletText($"Win: {xpResult.RivalWingsWin} " + (xpResult.RivalWingsWin == 1 ? "time" : "times"));
+                ImGui.BulletText($"Lose: {xpResult.RivalWingsLose} " + (xpResult.RivalWingsLose == 1 ? "time" : "times"));
             }
             else
             {
                 ImGui.Text("PvP Profile is not loaded.");
             }
         }
+
     }
 }
