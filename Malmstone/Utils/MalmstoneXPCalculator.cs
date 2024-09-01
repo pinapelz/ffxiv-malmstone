@@ -40,28 +40,15 @@ namespace Malmstone.Utils
 
         public static XpCalculationResult CalculateXp(int currentLevel, int goalLevel, int currentProgress)
         {
-            if (currentLevel < 1 || goalLevel < 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(currentLevel), "Levels must be greater than 0.");
-            }
 
-            int remainingXp = 0;
-
-            if (currentLevel <= PvpLevels.Length && goalLevel <= PvpLevels.Length)
-            {
-                remainingXp = CalculateRemainingXp(currentLevel, goalLevel, currentProgress);
-            }
-            else
-            {
-                remainingXp = CalculateRemainingXpBeyondChart(currentLevel, goalLevel, currentProgress);
-            }
+            int remainingXp = CalculateRemainingXpForLevels(currentLevel, goalLevel, currentProgress);
 
             if (remainingXp <= 0)
             {
                 return new XpCalculationResult { RemainingXp = 0, TargetLevel = goalLevel };
             }
 
-            var result = new XpCalculationResult
+            return new XpCalculationResult
             {
                 RemainingXp = remainingXp,
                 TargetLevel = goalLevel,
@@ -72,86 +59,89 @@ namespace Malmstone.Utils
                 FrontlineLose3rd = CalculateActivityCount(remainingXp, FrontlineLoseExp),
                 FrontlineDailyWin = CalculateActivityCount(remainingXp, FrontlineDailyWinExp),
                 FrontlineDailyLose2nd = CalculateActivityCount(remainingXp, FrontlineDailyLose2Exp),
-                FrontlineDailyLose3rd = CalculateActivityCount(remainingXp, FrontlineDailyLoseExp),
+                FrontlineDailyLose3rd = CalculateActivityCount(remainingXp, FrontlineLoseExp),
                 RivalWingsWin = CalculateActivityCount(remainingXp, RivalWingsWinExp),
                 RivalWingsLose = CalculateActivityCount(remainingXp, RivalWingsLoseExp)
             };
-
-            return result;
         }
 
         public static XpCalculationResult CalculateCrystallineConflictMatches(int currentLevel, int goalLevel, int currentProgress)
         {
-            var baseResult = CalculateXp(currentLevel, goalLevel, currentProgress);
-            var result = new XpCalculationResult
-            {
-                RemainingXp = baseResult.RemainingXp,
-                TargetLevel = baseResult.TargetLevel,
-                CrystallineConflictWin = CalculateActivityCount(baseResult.RemainingXp, CrystallineWinExp),
-                CrystallineConflictLose = CalculateActivityCount(baseResult.RemainingXp, CrystallineLoseExp)
-            };
+            int remainingXp = CalculateRemainingXpForLevels(currentLevel, goalLevel, currentProgress);
 
-            return result;
+            return new XpCalculationResult
+            {
+                RemainingXp = remainingXp,
+                TargetLevel = goalLevel,
+                CrystallineConflictWin = CalculateActivityCount(remainingXp, CrystallineWinExp),
+                CrystallineConflictLose = CalculateActivityCount(remainingXp, CrystallineLoseExp)
+            };
         }
 
         public static XpCalculationResult CalculateFrontlineMatches(int currentLevel, int goalLevel, int currentProgress)
         {
-            var baseResult = CalculateXp(currentLevel, goalLevel, currentProgress);
-            var result = new XpCalculationResult
-            {
-                RemainingXp = baseResult.RemainingXp,
-                TargetLevel = baseResult.TargetLevel,
-                FrontlineWin = CalculateActivityCount(baseResult.RemainingXp, FrontlineWinExp),
-                FrontlineLose2nd = CalculateActivityCount(baseResult.RemainingXp, FrontlineLose2Exp),
-                FrontlineLose3rd = CalculateActivityCount(baseResult.RemainingXp, FrontlineLoseExp),
-                FrontlineDailyWin = CalculateActivityCount(baseResult.RemainingXp, FrontlineDailyWinExp),
-                FrontlineDailyLose2nd = CalculateActivityCount(baseResult.RemainingXp, FrontlineDailyLose2Exp),
-                FrontlineDailyLose3rd = CalculateActivityCount(baseResult.RemainingXp, FrontlineDailyLoseExp)
-            };
+            int remainingXp = CalculateRemainingXpForLevels(currentLevel, goalLevel, currentProgress);
 
-            return result;
+            return new XpCalculationResult
+            {
+                RemainingXp = remainingXp,
+                TargetLevel = goalLevel,
+                FrontlineWin = CalculateActivityCount(remainingXp, FrontlineWinExp),
+                FrontlineLose2nd = CalculateActivityCount(remainingXp, FrontlineLose2Exp),
+                FrontlineLose3rd = CalculateActivityCount(remainingXp, FrontlineLoseExp),
+                FrontlineDailyWin = CalculateActivityCount(remainingXp, FrontlineDailyWinExp),
+                FrontlineDailyLose2nd = CalculateActivityCount(remainingXp, FrontlineDailyLose2Exp),
+                FrontlineDailyLose3rd = CalculateActivityCount(remainingXp, FrontlineLoseExp)
+            };
         }
 
         public static XpCalculationResult CalculateRivalWingsMatches(int currentLevel, int goalLevel, int currentProgress)
         {
-            var baseResult = CalculateXp(currentLevel, goalLevel, currentProgress);
-            var result = new XpCalculationResult
-            {
-                RemainingXp = baseResult.RemainingXp,
-                TargetLevel = baseResult.TargetLevel,
-                RivalWingsWin = CalculateActivityCount(baseResult.RemainingXp, RivalWingsWinExp),
-                RivalWingsLose = CalculateActivityCount(baseResult.RemainingXp, RivalWingsLoseExp)
-            };
+            int remainingXp = CalculateRemainingXpForLevels(currentLevel, goalLevel, currentProgress);
 
-            return result;
+            return new XpCalculationResult
+            {
+                RemainingXp = remainingXp,
+                TargetLevel = goalLevel,
+                RivalWingsWin = CalculateActivityCount(remainingXp, RivalWingsWinExp),
+                RivalWingsLose = CalculateActivityCount(remainingXp, RivalWingsLoseExp)
+            };
         }
 
-
-        private static int CalculateRemainingXp(int currentLevel, int goalLevel, int currentProgress)
+        private static int CalculateRemainingXpForLevels(int currentLevel, int goalLevel, int currentProgress)
         {
             int remainingXp = 0;
+            if (currentLevel <= PvpLevels.Length)
+            {
+                int upperBoundLevel = Math.Min(goalLevel, PvpLevels.Length);
+                remainingXp = CalculateRemainingXpWithinChart(currentLevel, upperBoundLevel, currentProgress);
 
+                if (goalLevel > PvpLevels.Length)
+                {
+                    currentLevel = PvpLevels.Length;
+                    currentProgress = 0;
+                }
+            }
+            if (goalLevel > PvpLevels.Length)
+            {
+                remainingXp += CalculateRemainingXpBeyondChart(currentLevel, goalLevel);
+            }
+            return remainingXp;
+        }
+
+        private static int CalculateRemainingXpWithinChart(int currentLevel, int goalLevel, int currentProgress)
+        {
+            int remainingXp = 0;
             for (int level = currentLevel; level < goalLevel; level++)
             {
                 remainingXp += PvpLevels[level];
             }
-
             return remainingXp - currentProgress;
         }
 
-        private static int CalculateRemainingXpBeyondChart(int currentLevel, int goalLevel, int currentProgress)
+        private static int CalculateRemainingXpBeyondChart(int currentLevel, int goalLevel)
         {
-            int remainingXp = 0;
-
-            if (currentLevel <= PvpLevels.Length)
-            {
-                remainingXp = CalculateRemainingXp(currentLevel, PvpLevels.Length, currentProgress);
-                currentLevel = PvpLevels.Length;
-            }
-
-            remainingXp += (goalLevel - currentLevel) * InfinityLevelExp;
-
-            return remainingXp;
+            return (goalLevel - currentLevel) * InfinityLevelExp;
         }
 
         private static int CalculateActivityCount(int remainingXp, int activityXp)
@@ -159,5 +149,6 @@ namespace Malmstone.Utils
             // Should always be greater than 0
             return Math.Max(1, (int)Math.Ceiling((double)remainingXp / activityXp));
         }
+
     }
 }

@@ -28,7 +28,7 @@ public sealed class Plugin : IDalamudPlugin
     public readonly WindowSystem WindowSystem = new("Malmstone");
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
-    private PvPService PvPService;
+    internal readonly PvPService PvPService;
 
     public Plugin()
     {
