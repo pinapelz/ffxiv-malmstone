@@ -11,6 +11,7 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Collections.Generic;
 using System.Linq;
 using Malmstone.Utils;
+using Malmstone.Addons;
 
 namespace Malmstone;
 
@@ -20,6 +21,8 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
     [PluginService] internal static IChatGui Chat { get; private set; } = null!;
+    [PluginService] internal static IAddonLifecycle AddonLifeCycle { get; private set; } = null!;
+    [PluginService] internal static IToastGui ToastGui { get; private set; } = null!;
 
     private const string CommandName = "/pmalm";
 
@@ -28,7 +31,9 @@ public sealed class Plugin : IDalamudPlugin
     public readonly WindowSystem WindowSystem = new("Malmstone");
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
+
     internal readonly PvPService PvPService;
+    internal PvPMatchAddon PvPAddon;
 
     public Plugin()
     {
@@ -37,6 +42,9 @@ public sealed class Plugin : IDalamudPlugin
         ConfigWindow = new ConfigWindow(this);
         MainWindow = new MainWindow(this);
         PvPService = new PvPService();
+        PvPAddon = new PvPMatchAddon(this);
+        PvPAddon.EnableCrystallineConflictPostMatch();
+        PvPAddon.EnableRivalWingsPostMatch();
 
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);

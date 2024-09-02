@@ -108,6 +108,16 @@ namespace Malmstone.Utils
             };
         }
 
+        public static int GetXPTargetForCurrentLevel(int currentLevel)
+        {
+            if (currentLevel >= PvpLevels.Length)
+            {
+                return InfinityLevelExp;
+            }
+            return PvpLevels[currentLevel];
+
+        }
+
         private static int CalculateRemainingXpForLevels(int currentLevel, int goalLevel, int currentProgress)
         {
             int remainingXp = 0;
