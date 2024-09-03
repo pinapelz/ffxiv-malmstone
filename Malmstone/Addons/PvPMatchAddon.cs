@@ -32,20 +32,20 @@ namespace Malmstone.Addons
             Plugin.AddonLifeCycle.UnregisterListener(OnCrystallineConflictRecordTrigger);
         }
 
-        public void EnableRivalWingsPostMatch()
-        {
-            Plugin.AddonLifeCycle.RegisterListener(AddonEvent.PostSetup, "ManeuversRecord", OnRivalWingsRecordTrigger);
-        }
         public void EnableFrontlinePostMatch()
         {
-            Plugin.AddonLifeCycle.RegisterListener(AddonEvent.PostSetup, "FrontlineRecord", OnRivalWingsRecordTrigger);
+            Plugin.AddonLifeCycle.RegisterListener(AddonEvent.PostSetup, "FrontlineRecord", OnFrontlineRecordTrigger);
         }
 
         public void DisableFrontlinePostMatch()
         {
-            Plugin.AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "FrontlineRecord", OnRivalWingsRecordTrigger);
+            Plugin.AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "FrontlineRecord", OnFrontlineRecordTrigger);
         }
 
+        public void EnableRivalWingsPostMatch()
+        {
+            Plugin.AddonLifeCycle.RegisterListener(AddonEvent.PostSetup, "ManeuversRecord", OnRivalWingsRecordTrigger);
+        }
         public void DisableRivalWingsPostMatch()
         {
             Plugin.AddonLifeCycle.UnregisterListener(OnRivalWingsRecordTrigger);
