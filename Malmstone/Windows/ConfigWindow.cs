@@ -13,9 +13,12 @@ public class ConfigWindow : Window, IDisposable
 
     public ConfigWindow(Plugin Plugin) : base("Malmstone Config")
     {
-        Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
-                ImGuiWindowFlags.NoScrollWithMouse;
-        Size = new Vector2(350, 400);
+        Flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
+        SizeConstraints = new WindowSizeConstraints
+        {
+            MinimumSize = new Vector2(350, 300),
+            MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
+        };
         Configuration = Plugin.Configuration;
         this.Plugin = Plugin;
     }

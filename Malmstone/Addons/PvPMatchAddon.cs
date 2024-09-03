@@ -39,7 +39,7 @@ namespace Malmstone.Addons
 
         public void DisableFrontlinePostMatch()
         {
-            Plugin.AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "FrontlineRecord", OnFrontlineRecordTrigger);
+            Plugin.AddonLifeCycle.UnregisterListener(OnFrontlineRecordTrigger);
         }
 
         public void EnableRivalWingsPostMatch()
@@ -55,7 +55,6 @@ namespace Malmstone.Addons
         // Runs on the result screen of the respective game mode
         private void OnCrystallineConflictRecordTrigger(AddonEvent eventType, AddonArgs addonInfo)
         {
-            Plugin.Chat.Print("Triggered MKS Record");
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
             if (seriesInfo == null) return;
             if (Plugin.Configuration.ShowProgressionToastPostMatch)
@@ -66,7 +65,6 @@ namespace Malmstone.Addons
 
         private void OnFrontlineRecordTrigger(AddonEvent eventType, AddonArgs addonInfo)
         {
-            Plugin.Chat.Print("Triggered Frontline Record");
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
             if (seriesInfo == null) return;
             if (Plugin.Configuration.ShowProgressionToastPostMatch)
@@ -77,7 +75,6 @@ namespace Malmstone.Addons
 
         private void OnRivalWingsRecordTrigger(AddonEvent eventType, AddonArgs addonInfo)
         {
-            Plugin.Chat.Print("Triggered Maneuvers Record");
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
             if (seriesInfo == null) return;
             if (Plugin.Configuration.ShowProgressionToastPostMatch)
