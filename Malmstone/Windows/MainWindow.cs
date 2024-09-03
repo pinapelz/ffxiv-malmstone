@@ -24,7 +24,7 @@ namespace Malmstone.Windows
         {
             SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(440, 480),
+                MinimumSize = new Vector2(440, 510),
                 MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
             };
 
@@ -43,10 +43,6 @@ namespace Malmstone.Windows
             {
                 ImGui.Text($"Current Series Level: {pvpInfo.CurrentSeriesRank}");
                 ImGui.Text($"Current Level Experience Progress: {pvpInfo.SeriesExperience} XP");
-                if (pvpInfo.CurrentSeriesRank != pvpInfo.ClaimedSeriesRank)
-                {
-                    ImGui.Text("Don't forget to claim your rank rewards!");
-                }
                 ImGui.Spacing();
 
                 ImGui.Text("Target Series Level:");
@@ -111,6 +107,16 @@ namespace Malmstone.Windows
                 ImGui.Spacing();
                 ImGui.BulletText($"Win: {xpResult.RivalWingsWin} " + (xpResult.RivalWingsWin == 1 ? "time" : "times"));
                 ImGui.BulletText($"Lose: {xpResult.RivalWingsLose} " + (xpResult.RivalWingsLose == 1 ? "time" : "times"));
+
+                ImGui.Separator();
+                ImGui.Spacing();
+                if (pvpInfo.CurrentSeriesRank != pvpInfo.ClaimedSeriesRank)
+                {
+                    ImGui.SameLine();
+                    ImGui.Text("Don't forget to claim your rank rewards!");
+                }
+                if (ImGui.Button("Settings"))
+                    Plugin.ToggleConfigUI();
             }
             else
             {
