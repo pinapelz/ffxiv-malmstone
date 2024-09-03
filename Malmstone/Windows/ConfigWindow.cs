@@ -9,6 +9,7 @@ public class ConfigWindow : Window, IDisposable
 {
     private Configuration Configuration;
     private Plugin Plugin;
+    private string[] ToastOptions = {"Normal", "Quest", "Error"};
 
     public ConfigWindow(Plugin Plugin) : base("Malmstone Config")
     {
@@ -40,6 +41,7 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Separator();
 
         ImGui.Text("Show XP to next level after PVP matches");
+        ImGui.SameLine();
         var showProgressionToastPostMatch = Configuration.ShowProgressionToastPostMatch;
         if (ImGui.Checkbox("##ShowProgressionToastPostMatch", ref showProgressionToastPostMatch))
         {
@@ -47,8 +49,28 @@ public class ConfigWindow : Window, IDisposable
             Configuration.Save();
         }
 
+        ImGui.Text("Notification Type");
+        int selectedPostMatchToastType = Configuration.PostmatchProgressionToastType;
+        if (ImGui.Combo("##MatchOptions", ref selectedPostMatchToastType, ToastOptions, ToastOptions.Length))
+        {
+            switch (selectedPostMatchToastType)
+            {
+                case 0:
+                    Plugin.ToastGui.ShowNormal("[Malmstone Calculator] Normal Toast Selected");
+                    break;
+                case 1:
+                    Plugin.ToastGui.ShowQuest("[Malmstone Calculator] Quest Toast Selected");
+                    break;
+                case 2:
+                    Plugin.ToastGui.ShowError("[Malmstone Calculator] Error Toast Selected");
+                    break;
+            }
+            Configuration.PostmatchProgressionToastType = selectedPostMatchToastType;
+            Configuration.Save();
+        }
+
         ImGui.Separator();
-        ImGui.Text("Show matches to next rank in chat postmatch");
+        ImGui.Text("Show matches until next rank in chat after");
 
 
         var showCCMatchesRemainingPostGame = Configuration.ShowProgressionChatPostCC;

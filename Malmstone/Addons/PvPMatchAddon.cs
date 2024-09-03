@@ -89,14 +89,30 @@ namespace Malmstone.Addons
 
         private void ShowSeriesProgressionToast(PvPSeriesInfo seriesInfo)
         {
-            Plugin.ToastGui.ShowNormal("Series Level " + seriesInfo.CurrentSeriesRank +
-                "     " + seriesInfo.SeriesExperience + "/" + MalmstoneXPCalculator.GetXPTargetForCurrentLevel(seriesInfo.CurrentSeriesRank) + " EXP");
+            switch (Plugin.Configuration.PostmatchProgressionToastType)
+            {
+                case 0:
+                    Plugin.ToastGui.ShowNormal("Series Level " + seriesInfo.CurrentSeriesRank +
+                        "     " + seriesInfo.SeriesExperience + "/" + MalmstoneXPCalculator.GetXPTargetForCurrentLevel(seriesInfo.CurrentSeriesRank) + " EXP");
+                    break;
+                case 1:
+                    Plugin.ToastGui.ShowQuest("Series Level " + seriesInfo.CurrentSeriesRank +
+                        "     " + seriesInfo.SeriesExperience + "/" + MalmstoneXPCalculator.GetXPTargetForCurrentLevel(seriesInfo.CurrentSeriesRank) + " EXP");
+                    break;
+                case 2:
+                    Plugin.ToastGui.ShowError("Series Level " + seriesInfo.CurrentSeriesRank +
+                        "     " + seriesInfo.SeriesExperience + "/" + MalmstoneXPCalculator.GetXPTargetForCurrentLevel(seriesInfo.CurrentSeriesRank) + " EXP");
+                    break;
+                default:
+                    Plugin.ToastGui.ShowNormal("Series Level " + seriesInfo.CurrentSeriesRank +
+                        "     " + seriesInfo.SeriesExperience + "/" + MalmstoneXPCalculator.GetXPTargetForCurrentLevel(seriesInfo.CurrentSeriesRank) + " EXP");
+                    break;
+            }
+
         }
 
         private void ShowSeriesProgressionMessage(PvPSeriesInfo seriesInfo, PvPContentType contentType)
         {
-            Plugin.Chat.Print("Series Level " + seriesInfo.CurrentSeriesRank +
-                " - " + seriesInfo.SeriesExperience + "/" + MalmstoneXPCalculator.GetXPTargetForCurrentLevel(seriesInfo.CurrentSeriesRank) + " EXP");
             var seString = new SeString(new List<Payload>());
             switch (contentType)
             {

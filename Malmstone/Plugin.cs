@@ -43,10 +43,18 @@ public sealed class Plugin : IDalamudPlugin
         MainWindow = new MainWindow(this);
         PvPService = new PvPService();
         PvPAddon = new PvPMatchAddon(this);
-        PvPAddon.EnableCrystallineConflictPostMatch();
-        PvPAddon.EnableRivalWingsPostMatch();
+        if (Configuration.ShowProgressionChatPostCC)
+            PvPAddon.EnableCrystallineConflictPostMatch();
+        if (Configuration.ShowProgressionChatPostRW)
+            PvPAddon.EnableRivalWingsPostMatch();
+        if (Configuration.ShowProgressionChatPostFL)
+            PvPAddon.EnableFrontlinePostMatch();
+        if (Configuration.PostmatchProgressionToastType < 0 || Configuration.PostmatchProgressionToastType > 2)
+        {
+            Configuration.PostmatchProgressionToastType = 0;
+        }
 
-        WindowSystem.AddWindow(ConfigWindow);
+            WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
