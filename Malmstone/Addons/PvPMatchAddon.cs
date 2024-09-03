@@ -22,6 +22,20 @@ namespace Malmstone.Addons
             this.Plugin = Plugin;
         }
 
+        public void EnablePostMatchProgressionToast()
+        {
+            Plugin.AddonLifeCycle.RegisterListener(AddonEvent.PreSetup, "MKSRecord", ShowSeriesProgressionToast);
+            Plugin.AddonLifeCycle.RegisterListener(AddonEvent.PreSetup, "FrontlineRecord", ShowSeriesProgressionToast);
+            Plugin.AddonLifeCycle.RegisterListener(AddonEvent.PreSetup, "ManeuversRecord", ShowSeriesProgressionToast);
+        }
+
+        public void DisablePostMatchProgressionToast()
+        {
+            Plugin.AddonLifeCycle.UnregisterListener(AddonEvent.PreSetup, "MKSRecord", ShowSeriesProgressionToast);
+            Plugin.AddonLifeCycle.UnregisterListener(AddonEvent.PreSetup, "FrontlineRecord", ShowSeriesProgressionToast);
+            Plugin.AddonLifeCycle.UnregisterListener(AddonEvent.PreSetup, "ManeuversRecord", ShowSeriesProgressionToast);
+        }
+
         public void EnableCrystallineConflictPostMatch()
         {
             Plugin.AddonLifeCycle.RegisterListener(AddonEvent.PostSetup, "MKSRecord", OnCrystallineConflictRecordTrigger);
@@ -29,7 +43,7 @@ namespace Malmstone.Addons
 
         public void DisableCrystallineConflictPostMatch()
         {
-            Plugin.AddonLifeCycle.UnregisterListener(OnCrystallineConflictRecordTrigger);
+            Plugin.AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "MKSRecord", OnCrystallineConflictRecordTrigger);
         }
 
         public void EnableFrontlinePostMatch()
@@ -39,7 +53,7 @@ namespace Malmstone.Addons
 
         public void DisableFrontlinePostMatch()
         {
-            Plugin.AddonLifeCycle.UnregisterListener(OnFrontlineRecordTrigger);
+            Plugin.AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "FrontlineRecord", OnFrontlineRecordTrigger);
         }
 
         public void EnableRivalWingsPostMatch()
@@ -48,7 +62,7 @@ namespace Malmstone.Addons
         }
         public void DisableRivalWingsPostMatch()
         {
-            Plugin.AddonLifeCycle.UnregisterListener(OnRivalWingsRecordTrigger);
+            Plugin.AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "ManeuversRecord", OnRivalWingsRecordTrigger);
         }
 
 
@@ -57,8 +71,6 @@ namespace Malmstone.Addons
         {
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
             if (seriesInfo == null) return;
-            if (Plugin.Configuration.ShowProgressionToastPostMatch)
-                ShowSeriesProgressionToast(seriesInfo);
             if (Plugin.Configuration.ShowProgressionChatPostCC)
                 ShowSeriesProgressionMessage(seriesInfo, PvPContentType.CrystallineConflict);
         }
@@ -67,8 +79,6 @@ namespace Malmstone.Addons
         {
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
             if (seriesInfo == null) return;
-            if (Plugin.Configuration.ShowProgressionToastPostMatch)
-                ShowSeriesProgressionToast(seriesInfo);
             if (Plugin.Configuration.ShowProgressionChatPostFL)
                 ShowSeriesProgressionMessage(seriesInfo, PvPContentType.RivalWings);
         }
@@ -77,15 +87,14 @@ namespace Malmstone.Addons
         {
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
             if (seriesInfo == null) return;
-            if (Plugin.Configuration.ShowProgressionToastPostMatch)
-                ShowSeriesProgressionToast(seriesInfo);
             if (Plugin.Configuration.ShowProgressionChatPostRW)
                 ShowSeriesProgressionMessage(seriesInfo, PvPContentType.RivalWings);
         }
 
-
-        private void ShowSeriesProgressionToast(PvPSeriesInfo seriesInfo)
+        private void ShowSeriesProgressionToast(AddonEvent eventType, AddonArgs addonInfo)
         {
+            PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
+            if (seriesInfo == null) return;
             switch (Plugin.Configuration.PostmatchProgressionToastType)
             {
                 case 0:

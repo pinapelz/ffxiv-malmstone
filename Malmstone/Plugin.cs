@@ -49,6 +49,8 @@ public sealed class Plugin : IDalamudPlugin
             PvPAddon.EnableRivalWingsPostMatch();
         if (Configuration.ShowProgressionChatPostFL)
             PvPAddon.EnableFrontlinePostMatch();
+        if (Configuration.ShowProgressionToastPostMatch)
+            PvPAddon.EnablePostMatchProgressionToast();
         if (Configuration.PostmatchProgressionToastType < 0 || Configuration.PostmatchProgressionToastType > 2)
         {
             Configuration.PostmatchProgressionToastType = 0;

@@ -43,12 +43,16 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.Separator();
 
-        ImGui.Text("Show XP to next level after PVP matches");
+        ImGui.Text("Show EXP progression after PVP matches");
         ImGui.SameLine();
         var showProgressionToastPostMatch = Configuration.ShowProgressionToastPostMatch;
         if (ImGui.Checkbox("##ShowProgressionToastPostMatch", ref showProgressionToastPostMatch))
         {
             Configuration.ShowProgressionToastPostMatch = showProgressionToastPostMatch;
+            if (showProgressionToastPostMatch)
+                Plugin.PvPAddon.EnablePostMatchProgressionToast();
+            else
+                Plugin.PvPAddon.DisablePostMatchProgressionToast();
             Configuration.Save();
         }
 
