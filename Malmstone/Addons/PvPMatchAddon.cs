@@ -133,7 +133,7 @@ namespace Malmstone.Addons
                     seString.Append(UIForegroundPayload.UIForegroundOff);
                     break;
                 case PvPContentType.Frontlines:
-                    MalmstoneXPCalculator.XpCalculationResult flResultData = MalmstoneXPCalculator.CalculateCrystallineConflictMatches(
+                    MalmstoneXPCalculator.XpCalculationResult flResultData = MalmstoneXPCalculator.CalculateFrontlineMatches(
                         seriesInfo.CurrentSeriesRank, seriesInfo.CurrentSeriesRank + 1, seriesInfo.SeriesExperience);
                     if (flResultData.FrontlineDailyLose3rd == 0) break;
                     seString.Append(new TextPayload("[Frontlines to Level " + (seriesInfo.CurrentSeriesRank + 1) + "]\n"));
@@ -141,6 +141,7 @@ namespace Malmstone.Addons
                     seString.Append(new TextPayload($"Take 1st Place: {flResultData.FrontlineWin} " + (flResultData.FrontlineWin == 1 ? "time" : "times") +" (" + (flResultData.FrontlineDailyWin) + ")\n"));
                     seString.Append(new TextPayload($"Take 2nd Place: {flResultData.FrontlineWin} " + (flResultData.FrontlineWin == 1 ? "time" : "times") + " (" + (flResultData.FrontlineDailyLose2nd) + ")\n"));
                     seString.Append(new TextPayload($"Take 3rd Place: {flResultData.FrontlineWin} " + (flResultData.FrontlineWin == 1 ? "time" : "times") + " (" + (flResultData.FrontlineDailyLose3rd) + ")\n"));
+                    seString.Append(new TextPayload($"Frontline Roulette Shown in Parentheses"));
                     seString.Append(UIForegroundPayload.UIForegroundOff);
                     break;
                 case PvPContentType.RivalWings:

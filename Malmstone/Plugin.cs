@@ -224,9 +224,9 @@ private void OnCommand(string command, string args)
         if (xpResult.RivalWingsWin > 0)
         {
             seString.Append(new TextPayload($"Win: {xpResult.RivalWingsWin} " + (xpResult.RivalWingsWin == 1 ? "time" : "times") + "\n"));
-        }
+            }
 
-        if (xpResult.RivalWingsLose > 0)
+            if (xpResult.RivalWingsLose > 0)
         {
             seString.Append(new TextPayload($"Lose: {xpResult.RivalWingsLose} " + (xpResult.RivalWingsLose == 1 ? "time" : "times") + "\n"));
         }
