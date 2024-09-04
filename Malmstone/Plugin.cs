@@ -76,6 +76,15 @@ public sealed class Plugin : IDalamudPlugin
         ConfigWindow.Dispose();
         MainWindow.Dispose();
 
+        if (Configuration.ShowProgressionChatPostCC)
+            PvPAddon.DisableCrystallineConflictPostMatch();
+        if (Configuration.ShowProgressionChatPostRW)
+            PvPAddon.DisableRivalWingsPostMatch();
+        if (Configuration.ShowProgressionChatPostFL)
+            PvPAddon.DisableFrontlinePostMatch();
+        if (Configuration.ShowProgressionToastPostMatch)
+            PvPAddon.DisablePostMatchProgressionToast();
+
         CommandManager.RemoveHandler(CommandName);
     }
 
