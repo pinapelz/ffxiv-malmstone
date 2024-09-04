@@ -80,7 +80,7 @@ namespace Malmstone.Addons
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
             if (seriesInfo == null) return;
             if (Plugin.Configuration.ShowProgressionChatPostFL)
-                ShowSeriesProgressionMessage(seriesInfo, PvPContentType.RivalWings);
+                ShowSeriesProgressionMessage(seriesInfo, PvPContentType.Frontlines);
         }
 
         private void OnRivalWingsRecordTrigger(AddonEvent eventType, AddonArgs addonInfo)
