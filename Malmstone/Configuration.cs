@@ -15,6 +15,7 @@ public class Configuration : IPluginConfiguration
     public bool ShowProgressionChatPostRW { get; set; } = true;
     public bool ShowProgressionChatPostCC { get; set; } = true;
     public bool ShowProgressionChatPostFL { get; set; } = true;
+    public bool ShowMainWindowOnPVPReward { get; set; } = true;
 
     // the below exist just to make saving less cumbersome
     public void Save()

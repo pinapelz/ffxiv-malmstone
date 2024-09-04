@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Malmstone.Utils;
 using Malmstone.Addons;
+using Dalamud.Game.Addon.Lifecycle;
 
 namespace Malmstone;
 
@@ -51,12 +52,15 @@ public sealed class Plugin : IDalamudPlugin
             PvPAddon.EnableFrontlinePostMatch();
         if (Configuration.ShowProgressionToastPostMatch)
             PvPAddon.EnablePostMatchProgressionToast();
+        if (Configuration.ShowMainWindowOnPVPReward)
+            EnablePVPRewardWindowAddon();
+        
         if (Configuration.PostmatchProgressionToastType < 0 || Configuration.PostmatchProgressionToastType > 2)
         {
             Configuration.PostmatchProgressionToastType = 0;
         }
 
-            WindowSystem.AddWindow(ConfigWindow);
+        WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
@@ -84,6 +88,8 @@ public sealed class Plugin : IDalamudPlugin
             PvPAddon.DisableFrontlinePostMatch();
         if (Configuration.ShowProgressionToastPostMatch)
             PvPAddon.DisablePostMatchProgressionToast();
+        if(Configuration.ShowMainWindowOnPVPReward)
+            DisablePVPRewardWindowAddon();
 
         CommandManager.RemoveHandler(CommandName);
     }
@@ -237,4 +243,16 @@ private void OnCommand(string command, string args)
 
     public void ToggleConfigUI() => ConfigWindow.Toggle();
     public void ToggleMainUI() => MainWindow.Toggle();
+
+    public void EnablePVPRewardWindowAddon()
+    {
+        AddonLifeCycle.RegisterListener(AddonEvent.PostSetup, "PvpReward", MainWindow.OnOpenPVPRewardWindow);
+        AddonLifeCycle.RegisterListener(AddonEvent.PreFinalize, "PvpReward", MainWindow.OnClosePVPRewardWindow);
+    }
+    public void DisablePVPRewardWindowAddon()
+    {
+        AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "PvpReward", MainWindow.OnOpenPVPRewardWindow);
+        AddonLifeCycle.UnregisterListener(AddonEvent.PreFinalize, "PvpReward", MainWindow.OnClosePVPRewardWindow);
+    }
 }
+

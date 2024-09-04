@@ -16,7 +16,7 @@ public class ConfigWindow : Window, IDisposable
         Flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(350, 300),
+            MinimumSize = new Vector2(370, 330),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
         Configuration = Plugin.Configuration;
@@ -124,6 +124,19 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.Separator();
         ImGui.Spacing();
+
+        ImGui.Text("Show calculations when viewing Series Malmstones");
+        ImGui.SameLine();
+        var showMainWindowOnPVPReward = Configuration.ShowMainWindowOnPVPReward;
+        if(ImGui.Checkbox("##ShowMainWindowOnPVPReward", ref showMainWindowOnPVPReward)){
+            if(showMainWindowOnPVPReward)
+                Plugin.EnablePVPRewardWindowAddon();
+            else
+                Plugin.DisablePVPRewardWindowAddon();
+            Configuration.ShowMainWindowOnPVPReward = showMainWindowOnPVPReward;
+            Configuration.Save();
+        }
+
         ImGui.Text("Changes saved automatically");
 
     }

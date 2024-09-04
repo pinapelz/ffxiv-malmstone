@@ -1,5 +1,7 @@
 using System;
 using System.Numerics;
+using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
+using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using Malmstone.Services;
@@ -123,6 +125,15 @@ namespace Malmstone.Windows
             {
                 ImGui.Text("PvP Profile is not loaded.");
             }
+        }
+        public void OnOpenPVPRewardWindow(AddonEvent eventType, AddonArgs addonInfo)
+        {
+            IsOpen = true;
+        }
+
+        public void OnClosePVPRewardWindow(AddonEvent eventType, AddonArgs addonInfo)
+        {
+            IsOpen = false;
         }
 
     }
