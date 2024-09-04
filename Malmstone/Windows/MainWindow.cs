@@ -24,7 +24,7 @@ namespace Malmstone.Windows
         {
             SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(440, 510),
+                MinimumSize = new Vector2(460, 510),
                 MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
             };
 
@@ -110,13 +110,14 @@ namespace Malmstone.Windows
 
                 ImGui.Separator();
                 ImGui.Spacing();
-                if (pvpInfo.CurrentSeriesRank != pvpInfo.ClaimedSeriesRank)
-                {
-                    ImGui.SameLine();
-                    ImGui.Text("Don't forget to claim your rank rewards!");
-                }
                 if (ImGui.Button("Settings"))
                     Plugin.ToggleConfigUI();
+                ImGui.SameLine();
+                if (pvpInfo.CurrentSeriesRank != pvpInfo.ClaimedSeriesRank)
+                {
+                    ImGui.Text("Don't forget to claim your Series Malmstone rewards!");
+                }
+
             }
             else
             {
