@@ -56,6 +56,13 @@ public class ConfigWindow : Window, IDisposable
             Configuration.Save();
         }
 
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("Shows a notification with current series level EXP progression after ALL PVP matches");
+            ImGui.EndTooltip();
+        }
+
         ImGui.Text("Notification Type");
         int selectedPostMatchToastType = Configuration.PostmatchProgressionToastType;
         if (ImGui.Combo("##MatchOptions", ref selectedPostMatchToastType, ToastOptions, ToastOptions.Length))
@@ -90,6 +97,12 @@ public class ConfigWindow : Window, IDisposable
                 Plugin.PvPAddon.DisableCrystallineConflictPostMatch();
             Configuration.Save();
         }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("Show Wins/Losses needed until next Series Level in chat after Crystalline Conflict matches");
+            ImGui.EndTooltip();
+        }
         ImGui.SameLine();
         ImGui.Text("Crystalline Conflict");
 
@@ -104,6 +117,12 @@ public class ConfigWindow : Window, IDisposable
                 Plugin.PvPAddon.DisableFrontlinePostMatch();
             Configuration.Save();
         }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("Show placements needed until next Series Level in chat after Frontline matches\nRoulettes shown in parentheses");
+            ImGui.EndTooltip();
+        }
         ImGui.SameLine();
         ImGui.Text("Frontlines");
 
@@ -117,6 +136,12 @@ public class ConfigWindow : Window, IDisposable
             else
                 Plugin.PvPAddon.DisableRivalWingsPostMatch();
             Configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("Show Wins/Losses needed until next Series Level in chat after Rival Wings matches");
+            ImGui.EndTooltip();
         }
         ImGui.SameLine();
         ImGui.Text("Rival Wings");
@@ -135,6 +160,12 @@ public class ConfigWindow : Window, IDisposable
                 Plugin.DisablePVPRewardWindowAddon();
             Configuration.ShowMainWindowOnPVPReward = showMainWindowOnPVPReward;
             Configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("Automatically open the calculator window when viewing Series Malmstone rewards");
+            ImGui.EndTooltip();
         }
 
         ImGui.Text("Changes saved automatically");

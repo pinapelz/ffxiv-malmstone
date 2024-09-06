@@ -44,7 +44,7 @@ namespace Malmstone.Windows
             if (pvpInfo != null)
             {
                 ImGui.Text($"Current Series Level: {pvpInfo.CurrentSeriesRank}");
-                ImGui.Text($"Current Level Experience Progress: {pvpInfo.SeriesExperience} XP");
+                ImGui.Text($"Current Level Experience Progress: {pvpInfo.SeriesExperience} EXP");
                 ImGui.Spacing();
 
                 ImGui.Text("Target Series Level:");
