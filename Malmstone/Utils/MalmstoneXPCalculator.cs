@@ -59,7 +59,7 @@ namespace Malmstone.Utils
                 FrontlineLose3rd = CalculateActivityCount(remainingXp, FrontlineLoseExp),
                 FrontlineDailyWin = CalculateActivityCount(remainingXp, FrontlineDailyWinExp),
                 FrontlineDailyLose2nd = CalculateActivityCount(remainingXp, FrontlineDailyLose2Exp),
-                FrontlineDailyLose3rd = CalculateActivityCount(remainingXp, FrontlineLoseExp),
+                FrontlineDailyLose3rd = CalculateActivityCount(remainingXp, FrontlineDailyLoseExp),
                 RivalWingsWin = CalculateActivityCount(remainingXp, RivalWingsWinExp),
                 RivalWingsLose = CalculateActivityCount(remainingXp, RivalWingsLoseExp)
             };
@@ -91,7 +91,7 @@ namespace Malmstone.Utils
                 FrontlineLose3rd = CalculateActivityCount(remainingXp, FrontlineLoseExp),
                 FrontlineDailyWin = CalculateActivityCount(remainingXp, FrontlineDailyWinExp),
                 FrontlineDailyLose2nd = CalculateActivityCount(remainingXp, FrontlineDailyLose2Exp),
-                FrontlineDailyLose3rd = CalculateActivityCount(remainingXp, FrontlineLoseExp)
+                FrontlineDailyLose3rd = CalculateActivityCount(remainingXp, FrontlineDailyLoseExp)
             };
         }
 
