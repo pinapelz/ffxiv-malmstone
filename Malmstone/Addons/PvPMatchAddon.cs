@@ -95,6 +95,8 @@ namespace Malmstone.Addons
         {
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
             if (seriesInfo == null) return;
+            if (Plugin.Configuration.SkipProgressionToastAfterGoal && seriesInfo.CurrentSeriesRank >= Plugin.Configuration.DefaultTargetRankProperty) return;
+                    
             switch (Plugin.Configuration.PostmatchProgressionToastType)
             {
                 case 0:
@@ -119,6 +121,7 @@ namespace Malmstone.Addons
 
         private void ShowSeriesProgressionMessage(PvPSeriesInfo seriesInfo, PvPContentType contentType)
         {
+            if (Plugin.Configuration.SkipProgressionChatAfterGoal && seriesInfo.CurrentSeriesRank >= Plugin.Configuration.DefaultTargetRankProperty) return;
             var seString = new SeString(new List<Payload>());
             switch (contentType)
             {

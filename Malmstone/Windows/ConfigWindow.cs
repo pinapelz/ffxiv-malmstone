@@ -16,7 +16,7 @@ public class ConfigWindow : Window, IDisposable
         Flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(370, 330),
+            MinimumSize = new Vector2(540, 380),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
         Configuration = Plugin.Configuration;
@@ -41,10 +41,49 @@ public class ConfigWindow : Window, IDisposable
             Configuration.Save();
         }
 
-        ImGui.Separator();
-
-        ImGui.Text("Show EXP progression after PVP matches");
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("Calculator will auto-populate with this number after initializing" +
+                       "\nAlso controls the notification override settings below");
+            ImGui.EndTooltip();
+        }
+        
+        var skipProgressionToastAfterGoal = Configuration.SkipProgressionToastAfterGoal;
+        if(ImGui.Checkbox("###SkipProgressionToastAfterGoal", ref skipProgressionToastAfterGoal)){
+            Configuration.SkipProgressionToastAfterGoal = skipProgressionToastAfterGoal;
+            Configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("Automatically stops showing EXP progression notification after reaching the Default Target Series Level" +
+                       "\nOverrides other EXP notification settings");
+            ImGui.EndTooltip();
+        }
         ImGui.SameLine();
+        ImGui.Text("Skip EXP progression notifications after default level is achieved");
+
+
+        
+        var skipProgressionChatAfterGoal = Configuration.SkipProgressionChatAfterGoal;
+        if(ImGui.Checkbox("###SkipProgressionChatAfterGoal", ref skipProgressionChatAfterGoal)){
+            Configuration.SkipProgressionChatAfterGoal = skipProgressionChatAfterGoal;
+            Configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("Automatically stops showing matches remaining chat messages after reaching the the Default Target Series Level" +
+                       "\nOverrides other post-match chat notification settings");
+            ImGui.EndTooltip();
+        }
+        ImGui.SameLine();
+        ImGui.Text("Skip remaining matches chat notifications after default level is achieved");
+
+
+        ImGui.Separator();
+        
         var showProgressionToastPostMatch = Configuration.ShowProgressionToastPostMatch;
         if (ImGui.Checkbox("##ShowProgressionToastPostMatch", ref showProgressionToastPostMatch))
         {
@@ -55,13 +94,14 @@ public class ConfigWindow : Window, IDisposable
                 Plugin.PvPAddon.DisablePostMatchProgressionToast();
             Configuration.Save();
         }
-
         if (ImGui.IsItemHovered())
         {
             ImGui.BeginTooltip();
             ImGui.Text("Shows a notification with current series level EXP progression after ALL PVP matches");
             ImGui.EndTooltip();
         }
+        ImGui.SameLine();
+        ImGui.Text("Show EXP progression after PVP matches");
 
         ImGui.Text("Notification Type");
         int selectedPostMatchToastType = Configuration.PostmatchProgressionToastType;
@@ -84,7 +124,7 @@ public class ConfigWindow : Window, IDisposable
         }
 
         ImGui.Separator();
-        ImGui.Text("Show matches until next rank in chat after");
+        ImGui.Text("Show matches until next level in chat post-game");
 
 
         var showCCMatchesRemainingPostGame = Configuration.ShowProgressionChatPostCC;
@@ -149,9 +189,7 @@ public class ConfigWindow : Window, IDisposable
 
         ImGui.Separator();
         ImGui.Spacing();
-
-        ImGui.Text("Show calculations when viewing Series Malmstones");
-        ImGui.SameLine();
+        
         var showMainWindowOnPVPReward = Configuration.ShowMainWindowOnPVPReward;
         if(ImGui.Checkbox("##ShowMainWindowOnPVPReward", ref showMainWindowOnPVPReward)){
             if(showMainWindowOnPVPReward)
@@ -167,6 +205,8 @@ public class ConfigWindow : Window, IDisposable
             ImGui.Text("Automatically open the calculator window when viewing Series Malmstone rewards");
             ImGui.EndTooltip();
         }
+        ImGui.SameLine();
+        ImGui.Text("Show calculations when viewing Series Malmstones");
 
         ImGui.Text("Changes saved automatically");
 
