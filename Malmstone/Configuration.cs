@@ -17,7 +17,9 @@ public class Configuration : IPluginConfiguration
     public bool ShowMainWindowOnPVPReward { get; set; } = true;
     public bool SkipProgressionToastAfterGoal { get; set; } = false;
     public bool SkipProgressionChatAfterGoal { get; set; } = false;
-    public bool TrackFrontlineBonus { get; set; } = false;
+    public bool TrackFrontlineBonus { get; set; } = true;
+    public int SavedFrontlineRewardBonus { get; set; } = -1;
+    public bool OutdatedFrontlineRewardBonus { get; set; } = false;
 
     // the below exist just to make saving less cumbersome
     public void Save()

@@ -53,7 +53,8 @@ namespace Malmstone.Addons
         public void EnableFrontlinePostMatch()
         {
             Plugin.AddonLifeCycle.RegisterListener(AddonEvent.PostSetup, "FrontlineRecord", OnFrontlineRecordTrigger);
-            Plugin.PvPService.CurrentFrontlineLosingBonus = -1; // Reset bonus tracking for now until config save is done
+            Plugin.PvPService.CurrentFrontlineLosingBonus = Plugin.Configuration.SavedFrontlineRewardBonus;
+            Plugin.Configuration.OutdatedFrontlineRewardBonus = true;
             FrontlineRecordPostSetupEnabled = true;
         }
 
@@ -121,6 +122,7 @@ namespace Malmstone.Addons
             {
                 FrontlineMatchResult = FrontlinePlacement.ThirdPlace;
             }
+            Plugin.Logger.Debug("Frontline Match Result: " + FrontlineMatchResult.ToString());
             if (FrontlineMatchResult != FrontlinePlacement.Unknown)
             {
                 unsafe
@@ -135,6 +137,9 @@ namespace Malmstone.Addons
                     if (int.TryParse(SeriesExpText, out int SeriesExpEarned))
                     {
                         int CurrentLossBonus = Plugin.PvPService.GenerateFrontlineBonus(FrontlineMatchResult, SeriesExpEarned);
+                        Plugin.Logger.Debug("Series EXP Earned: " + SeriesExpEarned.ToString());
+                        Plugin.Configuration.SavedFrontlineRewardBonus = CurrentLossBonus;
+                        Plugin.Configuration.OutdatedFrontlineRewardBonus = false;
                     }
                     else
                     {

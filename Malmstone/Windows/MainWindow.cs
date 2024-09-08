@@ -26,7 +26,7 @@ namespace Malmstone.Windows
         {
             SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(460, 510),
+                MinimumSize = new Vector2(460, 530),
                 MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
             };
 
@@ -120,7 +120,7 @@ namespace Malmstone.Windows
                     {
                         if(Plugin.PvPService.CurrentFrontlineLosingBonus == 0)
                         {
-                            ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "No Frontline Reward Bonus Currently Active");
+                            ImGui.Text("No Frontline Reward Bonus Currently Active");
                         }
                         else
                         {
@@ -129,7 +129,19 @@ namespace Malmstone.Windows
                             {
                                 ImGui.BeginTooltip();
                                 ImGui.Text("You will earn a " + Plugin.PvPService.CurrentFrontlineLosingBonus + "%% bonus on PvP EXP, Series EXP, and Wolf Marks " +
-                                    "until attain First Place" );
+                                    "until attaining First Place" );
+                                ImGui.EndTooltip();
+                            }
+                        }
+                        if (Plugin.Configuration.OutdatedFrontlineRewardBonus)
+                        {
+                            ImGui.SameLine();
+                            ImGui.TextColored(new Vector4(1.0f, 0.0f, 0.0f, 1.0f),"(Outdated)");
+                            if (ImGui.IsItemHovered())
+                            {
+                                ImGui.BeginTooltip();
+                                ImGui.Text("This information may be outdated due to Frontline tracking loading and unloading!" +
+                                    "\nCalculations will refresh after your next match of Frontlines");
                                 ImGui.EndTooltip();
                             }
                         }

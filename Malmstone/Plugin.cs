@@ -24,6 +24,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IChatGui Chat { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifeCycle { get; private set; } = null!;
     [PluginService] internal static IToastGui ToastGui { get; private set; } = null!;
+    [PluginService] internal static IPluginLog Logger { get; set; } = default!;
 
     private const string CommandName = "/pmalm";
 
