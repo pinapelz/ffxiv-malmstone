@@ -5,12 +5,16 @@ using Malmstone.Utils;
 using Dalamud.Game.Text.SeStringHandling;
 using System.Collections.Generic;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
+using FFXIVClientStructs.FFXIV.Component.GUI;
+using Dalamud.Memory;
+using static Malmstone.Services.PvPService;
 
 namespace Malmstone.Addons
 {
     internal class PvPMatchAddon
     {
         private Plugin Plugin;
+        public bool FrontlineRecordPostSetupEnabled = false;
         private enum PvPContentType
         {
             CrystallineConflict = 1,
@@ -49,11 +53,14 @@ namespace Malmstone.Addons
         public void EnableFrontlinePostMatch()
         {
             Plugin.AddonLifeCycle.RegisterListener(AddonEvent.PostSetup, "FrontlineRecord", OnFrontlineRecordTrigger);
+            Plugin.PvPService.CurrentFrontlineLosingBonus = -1; // Reset bonus tracking for now until config save is done
+            FrontlineRecordPostSetupEnabled = true;
         }
 
         public void DisableFrontlinePostMatch()
         {
             Plugin.AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "FrontlineRecord", OnFrontlineRecordTrigger);
+            FrontlineRecordPostSetupEnabled = false;
         }
 
         public void EnableRivalWingsPostMatch()
@@ -64,12 +71,13 @@ namespace Malmstone.Addons
         {
             Plugin.AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "ManeuversRecord", OnRivalWingsRecordTrigger);
         }
-
+        
 
         // Runs on the result screen of the respective game mode
         private void OnCrystallineConflictRecordTrigger(AddonEvent eventType, AddonArgs addonInfo)
         {
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
+            CheckFrontlineBonus(eventType, addonInfo);
             if (seriesInfo == null) return;
             if (Plugin.Configuration.ShowProgressionChatPostCC)
                 ShowSeriesProgressionMessage(seriesInfo, PvPContentType.CrystallineConflict);
@@ -77,6 +85,8 @@ namespace Malmstone.Addons
 
         private void OnFrontlineRecordTrigger(AddonEvent eventType, AddonArgs addonInfo)
         {
+            if (Plugin.Configuration.TrackFrontlineBonus)
+                CheckFrontlineBonus(eventType, addonInfo);
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
             if (seriesInfo == null) return;
             if (Plugin.Configuration.ShowProgressionChatPostFL)
@@ -89,6 +99,54 @@ namespace Malmstone.Addons
             if (seriesInfo == null) return;
             if (Plugin.Configuration.ShowProgressionChatPostRW)
                 ShowSeriesProgressionMessage(seriesInfo, PvPContentType.RivalWings);
+        }
+
+        private void CheckFrontlineBonus(AddonEvent eventType, AddonArgs addonInfo)
+        {
+            PVPProfileFrontlineResults CurrentFrontlineResults = Plugin.PvPService.GetPVPProfileFrontlineResults();
+            if (CurrentFrontlineResults.FirstPlace == 0 &&
+                CurrentFrontlineResults.SecondPlace == 0 &&
+                CurrentFrontlineResults.ThirdPlace == 0) return;
+            // Check placement of current Frontline match
+            FrontlinePlacement FrontlineMatchResult = FrontlinePlacement.Unknown;
+            if (CurrentFrontlineResults.FirstPlace > Plugin.PvPService.CachedFrontlineResults.FirstPlace)
+            {
+                FrontlineMatchResult = FrontlinePlacement.FirstPlace;
+            }
+            else if (CurrentFrontlineResults.SecondPlace > Plugin.PvPService.CachedFrontlineResults.SecondPlace)
+            {
+                FrontlineMatchResult = FrontlinePlacement.SecondPlace;
+            }
+            else if (CurrentFrontlineResults.ThirdPlace > Plugin.PvPService.CachedFrontlineResults.ThirdPlace)
+            {
+                FrontlineMatchResult = FrontlinePlacement.ThirdPlace;
+            }
+            if (FrontlineMatchResult != FrontlinePlacement.Unknown)
+            {
+                unsafe
+                {
+                    var FrontlineResultUnit = (AtkUnitBase*)addonInfo.Addon;
+                    if (FrontlineResultUnit == null) return;
+                    var SeriesExpComponent = FrontlineResultUnit->GetComponentByNodeId(35);
+                    var SeriesExpTextNode = (AtkTextNode*)SeriesExpComponent->GetTextNodeById(2);
+                    byte* SeriesExpTextBytePointer = SeriesExpTextNode->GetText();
+                    nint SeriesExpTextAddr = (nint)SeriesExpTextBytePointer;
+                    string SeriesExpText = MemoryHelper.ReadStringNullTerminated(SeriesExpTextAddr);
+                    if (int.TryParse(SeriesExpText, out int SeriesExpEarned))
+                    {
+                        int CurrentLossBonus = Plugin.PvPService.GenerateFrontlineBonus(FrontlineMatchResult, SeriesExpEarned);
+                    }
+                    else
+                    {
+                        Plugin.Chat.PrintError("[Malmstone Calculator] Unable to get earned Series EXP: " + SeriesExpText);
+                    }
+                }
+            }
+            else
+            {
+                Plugin.Chat.PrintError("[Malmstone Calculator] Unable to get current Frontline match results");
+            }
+            Plugin.PvPService.UpdateFrontlineResultCache();
         }
 
         private void ShowSeriesProgressionToast(AddonEvent eventType, AddonArgs addonInfo)

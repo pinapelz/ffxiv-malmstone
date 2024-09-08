@@ -101,6 +101,41 @@ namespace Malmstone.Windows
                 ImGui.BulletText($"Take 2nd Place: {xpResult.FrontlineDailyLose2nd} " + (xpResult.FrontlineDailyLose2nd == 1 ? "time" : "times"));
                 ImGui.BulletText($"Take 3rd Place: {xpResult.FrontlineDailyLose3rd} " + (xpResult.FrontlineDailyLose3rd == 1 ? "time" : "times"));
 
+
+                if (Plugin.Configuration.TrackFrontlineBonus)
+                {
+                    if (Plugin.PvPService.CurrentFrontlineLosingBonus == -1)
+                    {
+                        ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "Complete a Frontline match to view current reward bonus");
+                        if (ImGui.IsItemHovered())
+                        {
+                            ImGui.BeginTooltip();
+                            ImGui.Text("This calculates the losing streak bonus you receive after consecutive losses in Frontlines" +
+                                "\nPlay a match of Frontline to confirm your existing losing bonus" +
+                                "\nYou can turn off tracking entirely in the settings");
+                            ImGui.EndTooltip();
+                        }
+                    }
+                    else
+                    {
+                        if(Plugin.PvPService.CurrentFrontlineLosingBonus == 0)
+                        {
+                            ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "No Frontline Reward Bonus Currently Active");
+                        }
+                        else
+                        {
+                            ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "You'll receive a " + Plugin.PvPService.CurrentFrontlineLosingBonus + "%% reward boost next Frontline match");
+                            if (ImGui.IsItemHovered())
+                            {
+                                ImGui.BeginTooltip();
+                                ImGui.Text("You will earn a " + Plugin.PvPService.CurrentFrontlineLosingBonus + "%% bonus on PvP EXP, Series EXP, and Wolf Marks " +
+                                    "until attain First Place" );
+                                ImGui.EndTooltip();
+                            }
+                        }
+                    }
+                }
+
                 ImGui.Spacing();
                 ImGui.Separator();
 

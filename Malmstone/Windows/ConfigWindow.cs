@@ -151,9 +151,9 @@ public class ConfigWindow : Window, IDisposable
         if (ImGui.Checkbox("##ShowFLMatchesRemainingPostGame", ref showFLMatchesRemainingPostGame))
         {
             Configuration.ShowProgressionChatPostFL = showFLMatchesRemainingPostGame;
-            if (showFLMatchesRemainingPostGame)
+            if (showFLMatchesRemainingPostGame && !Plugin.PvPAddon.FrontlineRecordPostSetupEnabled)
                 Plugin.PvPAddon.EnableFrontlinePostMatch();
-            else
+            else if (!showFLMatchesRemainingPostGame && !Configuration.TrackFrontlineBonus)
                 Plugin.PvPAddon.DisableFrontlinePostMatch();
             Configuration.Save();
         }
@@ -165,6 +165,32 @@ public class ConfigWindow : Window, IDisposable
         }
         ImGui.SameLine();
         ImGui.Text("Frontlines");
+
+        ImGui.SameLine();
+        ImGui.Spacing();
+        ImGui.SameLine();
+
+        var trackFrontlineBonus = Configuration.TrackFrontlineBonus;
+        if (ImGui.Checkbox("##TrackFrontlineBonus", ref trackFrontlineBonus))
+        {
+            Configuration.TrackFrontlineBonus = trackFrontlineBonus;
+            if (trackFrontlineBonus && !Plugin.PvPAddon.FrontlineRecordPostSetupEnabled)
+                Plugin.PvPAddon.EnableFrontlinePostMatch();
+            else if(!trackFrontlineBonus && !Configuration.ShowProgressionChatPostFL)
+                Plugin.PvPAddon.DisableFrontlinePostMatch();
+            Configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("(EXPERIMENTAL) Track the reward bonus you get for consecutive losses in Frontline" +
+                "\n3rd place = +10 percent bonus (max 50 percent)" +
+                "\n2nd place = Current bonus is kept" +
+                "\n1st Place = Bonus reset to 0\n");
+            ImGui.EndTooltip();
+        }
+        ImGui.SameLine();
+        ImGui.Text("Track Frontline Reward Bonus");
 
 
         var showRWMatchesRemainingPostGame = Configuration.ShowProgressionChatPostRW;
