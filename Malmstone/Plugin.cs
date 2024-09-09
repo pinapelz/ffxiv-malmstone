@@ -57,7 +57,9 @@ public sealed class Plugin : IDalamudPlugin
             EnablePVPRewardWindowAddon();
 
         PvPService.UpdateFrontlineResultCache();
-        
+        if (Configuration.IsPrimedForBuff)
+            PvPService.ConsecutiveThirdPlaceFrontline = 1;
+
         if (Configuration.PostmatchProgressionToastType < 0 || Configuration.PostmatchProgressionToastType > 2)
         {
             Configuration.PostmatchProgressionToastType = 0;

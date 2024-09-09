@@ -20,6 +20,7 @@ public class Configuration : IPluginConfiguration
     public bool TrackFrontlineBonus { get; set; } = true;
     public int SavedFrontlineRewardBonus { get; set; } = -1;
     public bool OutdatedFrontlineRewardBonus { get; set; } = false;
+    public bool IsPrimedForBuff { get; set; } = false;
 
     // the below exist just to make saving less cumbersome
     public void Save()

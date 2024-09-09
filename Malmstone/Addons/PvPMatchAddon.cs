@@ -153,6 +153,17 @@ namespace Malmstone.Addons
             {
                 Plugin.Chat.PrintError("[Malmstone Calculator] Unable to get current Frontline match results");
             }
+            if(Plugin.PvPService.ConsecutiveThirdPlaceFrontline >= 1 && Plugin.Configuration.SavedFrontlineRewardBonus == 0)
+            {
+                Plugin.Logger.Debug("Primed For Buff! Next 3rd place will trigger losing streak bonus");
+                Plugin.Configuration.IsPrimedForBuff = true;
+                Plugin.Configuration.Save();
+            }
+            else
+            {
+                Plugin.Configuration.IsPrimedForBuff = false;
+                Plugin.Configuration.Save();
+            }
             Plugin.PvPService.UpdateFrontlineResultCache();
         }
 
