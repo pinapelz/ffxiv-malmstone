@@ -55,6 +55,7 @@ namespace Malmstone.Addons
             Plugin.AddonLifeCycle.RegisterListener(AddonEvent.PostSetup, "FrontlineRecord", OnFrontlineRecordTrigger);
             Plugin.PvPService.CurrentFrontlineLosingBonus = Plugin.Configuration.SavedFrontlineRewardBonus;
             Plugin.Configuration.OutdatedFrontlineRewardBonus = true;
+            Plugin.Configuration.Save();
             FrontlineRecordPostSetupEnabled = true;
         }
 
@@ -140,6 +141,7 @@ namespace Malmstone.Addons
                         Plugin.Logger.Debug("Series EXP Earned: " + SeriesExpEarned.ToString());
                         Plugin.Configuration.SavedFrontlineRewardBonus = CurrentLossBonus;
                         Plugin.Configuration.OutdatedFrontlineRewardBonus = false;
+                        Plugin.Configuration.Save();
                     }
                     else
                     {

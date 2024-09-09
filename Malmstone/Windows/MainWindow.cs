@@ -26,7 +26,7 @@ namespace Malmstone.Windows
         {
             SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(460, 545),
+                MinimumSize = new Vector2(460, 550),
                 MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
             };
 
