@@ -122,12 +122,12 @@ namespace Malmstone.Windows
                         {
                             if(Plugin.PvPService.ConsecutiveThirdPlaceFrontline == 1)
                             {
-                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "You'll receive 10%% reward bonus if you place 3rd");
+                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "You'll receive a 10%% reward bonus if you place 3rd");
                             }
                             if (ImGui.IsItemHovered())
                             {
                                 ImGui.BeginTooltip();
-                                ImGui.Text("You're primed for a reward bonus! You will get a 10% reward bonus if you place 3rd again" +
+                                ImGui.Text("You're primed for a reward bonus! You will get a 10%% reward bonus if you place 3rd again" +
                                     "\nCounter resets if you rank 1st");
                                 ImGui.EndTooltip();
                             }
