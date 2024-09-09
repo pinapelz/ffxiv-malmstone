@@ -5,6 +5,7 @@ namespace Malmstone.Services
     public class PvPService
     {
         public int CurrentFrontlineLosingBonus = -1;
+        public int ConsecutiveThirdPlaceFrontline = 0;
 
         public enum FrontlinePlacement
         {
@@ -65,10 +66,11 @@ namespace Malmstone.Services
             // 1500 (no bonus), 1650, 1800, 1950, 2100, 2250 1st
             if (FrontlineResult == FrontlinePlacement.ThirdPlace)
             {
+                ConsecutiveThirdPlaceFrontline++;
                 switch (EarnedSeriesEXP)
-                {
+                { // Next 3rd place will get +10% value
                     case 1000:
-                        CurrentFrontlineLosingBonus = 0;
+                        CurrentFrontlineLosingBonus = 0; // Primed for buff
                         return 0;
                     case 1100:
                         CurrentFrontlineLosingBonus = 10;
@@ -117,29 +119,10 @@ namespace Malmstone.Services
             }
             else if (FrontlineResult == FrontlinePlacement.FirstPlace)
             {
-                switch (EarnedSeriesEXP)
-                {
-                    case 1500:
-                        CurrentFrontlineLosingBonus = 0;
-                        return 0;
-                    case 1650:
-                        CurrentFrontlineLosingBonus = 10;
-                        return 10;
-                    case 1800:
-                        CurrentFrontlineLosingBonus = 20;
-                        return 20;
-                    case 1950:
-                        CurrentFrontlineLosingBonus = 30;
-                        return 30;
-                    case 1750:
-                        CurrentFrontlineLosingBonus = 40;
-                        return 40;
-                    case 1875:
-                        CurrentFrontlineLosingBonus = 50;
-                        return 50;
-                    default:
-                        return -1;
-                }
+                // Buff is reset regardless
+                ConsecutiveThirdPlaceFrontline = 0;
+                CurrentFrontlineLosingBonus = 0;
+                return 0;
             }
             return -1;
         }

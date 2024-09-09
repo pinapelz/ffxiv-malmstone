@@ -26,7 +26,7 @@ namespace Malmstone.Windows
         {
             SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(460, 530),
+                MinimumSize = new Vector2(460, 545),
                 MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
             };
 
@@ -120,17 +120,42 @@ namespace Malmstone.Windows
                     {
                         if(Plugin.PvPService.CurrentFrontlineLosingBonus == 0)
                         {
+                            if(Plugin.PvPService.ConsecutiveThirdPlaceFrontline == 1)
+                            {
+                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "You'll receive 10%% reward bonus if you place 3rd");
+                            }
+                            if (ImGui.IsItemHovered())
+                            {
+                                ImGui.BeginTooltip();
+                                ImGui.Text("You're primed for a reward bonus! You will get a 10% reward bonus if you place 3rd again" +
+                                    "\nCounter resets if you rank 1st");
+                                ImGui.EndTooltip();
+                            }
                             ImGui.Text("No Frontline Reward Bonus Currently Active");
                         }
                         else
                         {
-                            ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "You'll receive a " + Plugin.PvPService.CurrentFrontlineLosingBonus + "%% reward boost next Frontline match");
+                            if (Plugin.PvPService.CurrentFrontlineLosingBonus != 50)
+                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "You'll receive a " + Plugin.PvPService.CurrentFrontlineLosingBonus + "%% reward bonus placing 1st or 2nd");
+                            else
+                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "You'll receive a " + Plugin.PvPService.CurrentFrontlineLosingBonus + "%% reward bonus placing 1st, 2nd, or 3rd");
                             if (ImGui.IsItemHovered())
                             {
                                 ImGui.BeginTooltip();
-                                ImGui.Text("You will earn a " + Plugin.PvPService.CurrentFrontlineLosingBonus + "%% bonus on PvP EXP, Series EXP, and Wolf Marks " +
+                                ImGui.Text("You'll earn a percentage bonus on PvP EXP, Series EXP, and Wolf Marks " +
                                     "until attaining First Place" );
                                 ImGui.EndTooltip();
+                            }
+                            if (Plugin.PvPService.CurrentFrontlineLosingBonus != 50)
+                            {
+                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "Your reward bonus will increase to " + (Plugin.PvPService.CurrentFrontlineLosingBonus + 10) + "%% if place 3rd");
+                                if (ImGui.IsItemHovered())
+                                {
+                                    ImGui.BeginTooltip();
+                                    ImGui.Text($"Finishing 3rd again will increase your bonus to {Plugin.PvPService.CurrentFrontlineLosingBonus + 10}%." +
+                                                   "\nThis increased bonus will also apply to the match where this happens.");
+                                    ImGui.EndTooltip();
+                                }
                             }
                         }
                         if (Plugin.Configuration.OutdatedFrontlineRewardBonus)
