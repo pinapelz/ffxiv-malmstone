@@ -24,6 +24,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IChatGui Chat { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifeCycle { get; private set; } = null!;
     [PluginService] internal static IToastGui ToastGui { get; private set; } = null!;
+    [PluginService] internal static IPluginLog Logger { get; set; } = default!;
 
     private const string CommandName = "/pmalm";
 
@@ -48,12 +49,14 @@ public sealed class Plugin : IDalamudPlugin
             PvPAddon.EnableCrystallineConflictPostMatch();
         if (Configuration.ShowProgressionChatPostRW)
             PvPAddon.EnableRivalWingsPostMatch();
-        if (Configuration.ShowProgressionChatPostFL)
+        if (Configuration.ShowProgressionChatPostFL || Configuration.TrackFrontlineBonus)
             PvPAddon.EnableFrontlinePostMatch();
         if (Configuration.ShowProgressionToastPostMatch)
             PvPAddon.EnablePostMatchProgressionToast();
         if (Configuration.ShowMainWindowOnPVPReward)
             EnablePVPRewardWindowAddon();
+
+        PvPService.UpdateFrontlineResultCache();
         
         if (Configuration.PostmatchProgressionToastType < 0 || Configuration.PostmatchProgressionToastType > 2)
         {
@@ -84,13 +87,13 @@ public sealed class Plugin : IDalamudPlugin
             PvPAddon.DisableCrystallineConflictPostMatch();
         if (Configuration.ShowProgressionChatPostRW)
             PvPAddon.DisableRivalWingsPostMatch();
-        if (Configuration.ShowProgressionChatPostFL)
+        if (Configuration.ShowProgressionChatPostFL || Configuration.TrackFrontlineBonus)
             PvPAddon.DisableFrontlinePostMatch();
         if (Configuration.ShowProgressionToastPostMatch)
             PvPAddon.DisablePostMatchProgressionToast();
         if(Configuration.ShowMainWindowOnPVPReward)
             DisablePVPRewardWindowAddon();
-
+        
         CommandManager.RemoveHandler(CommandName);
     }
 
@@ -254,5 +257,6 @@ private void OnCommand(string command, string args)
         AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "PvpReward", MainWindow.OnOpenPVPRewardWindow);
         AddonLifeCycle.UnregisterListener(AddonEvent.PreFinalize, "PvpReward", MainWindow.OnClosePVPRewardWindow);
     }
+
 }
 
