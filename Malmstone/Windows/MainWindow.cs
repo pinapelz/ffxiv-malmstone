@@ -157,9 +157,9 @@ namespace Malmstone.Windows
                         else
                         {
                             if (Plugin.PvPService.CurrentFrontlineLosingBonus != 50)
-                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "You'll receive a " + Plugin.PvPService.CurrentFrontlineLosingBonus + "%% reward bonus placing 1st or 2nd");
+                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "You'll receive a " + Plugin.PvPService.CurrentFrontlineLosingBonus + "%% reward bonus after placing 1st or 2nd");
                             else
-                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "You'll receive a " + Plugin.PvPService.CurrentFrontlineLosingBonus + "%% reward bonus placing 1st, 2nd, or 3rd");
+                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "You'll receive a " + Plugin.PvPService.CurrentFrontlineLosingBonus + "%% reward bonus after placing 1st, 2nd, or 3rd");
                             if (ImGui.IsItemHovered())
                             {
                                 ImGui.BeginTooltip();
@@ -169,12 +169,12 @@ namespace Malmstone.Windows
                             }
                             if (Plugin.PvPService.CurrentFrontlineLosingBonus != 50)
                             {
-                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "Your reward bonus will increase to " + (Plugin.PvPService.CurrentFrontlineLosingBonus + 10) + "%% if place 3rd");
+                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "Your reward bonus will increase to " + (Plugin.PvPService.CurrentFrontlineLosingBonus + 10) + "%% if you place 3rd");
                                 if (ImGui.IsItemHovered())
                                 {
                                     ImGui.BeginTooltip();
-                                    ImGui.Text($"Finishing 3rd again will increase your bonus to {Plugin.PvPService.CurrentFrontlineLosingBonus + 10}%." +
-                                                   "\nThis increased bonus will also apply to the match where this happens.");
+                                    ImGui.Text($"Finishing 3rd again will increase your bonus to {Plugin.PvPService.CurrentFrontlineLosingBonus + 10}%%" +
+                                                   "\nThis increased bonus will also apply to the match where this happens");
                                     ImGui.EndTooltip();
                                 }
                             }
@@ -186,8 +186,8 @@ namespace Malmstone.Windows
                             if (ImGui.IsItemHovered())
                             {
                                 ImGui.BeginTooltip();
-                                ImGui.Text("This information may be outdated due to Frontline tracking loading and unloading!" +
-                                    "\nCalculations will refresh after your next match of Frontlines");
+                                ImGui.Text("This information may be outdated due to Frontline tracking unloading!" +
+                                    "\nCalculations will refresh after your next match of Frontline");
                                 ImGui.EndTooltip();
                             }
                         }
