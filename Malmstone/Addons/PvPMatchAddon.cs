@@ -79,7 +79,6 @@ namespace Malmstone.Addons
         private void OnCrystallineConflictRecordTrigger(AddonEvent eventType, AddonArgs addonInfo)
         {
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
-            CheckFrontlineBonus(eventType, addonInfo);
             if (seriesInfo == null) return;
             if (Plugin.Configuration.ShowProgressionChatPostCC)
                 ShowSeriesProgressionMessage(seriesInfo, PvPContentType.CrystallineConflict);
