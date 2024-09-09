@@ -80,6 +80,13 @@ namespace Malmstone.Windows
 
                 // Crystalline Conflict Section
                 ImGui.TextColored(new Vector4(0.6f, 0.8f, 1f, 1f), "Crystalline Conflict");
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.BeginTooltip();
+                    ImGui.Text("Win: 900 Series EXP" +
+                        "\nLose: 700 Series EXP");
+                    ImGui.EndTooltip();
+                }
                 ImGui.Spacing();
                 ImGui.BulletText($"Win: {xpResult.CrystallineConflictWin} " + (xpResult.CrystallineConflictWin == 1 ? "time" : "times"));
                 ImGui.BulletText($"Lose: {xpResult.CrystallineConflictLose} " + (xpResult.CrystallineConflictLose == 1 ? "time" : "times"));
@@ -89,6 +96,14 @@ namespace Malmstone.Windows
 
                 // Frontlines Section
                 ImGui.TextColored(new Vector4(0.8f, 0.6f, 0.6f, 1f), "Frontlines");
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.BeginTooltip();
+                    ImGui.Text("1st: 1500 Series EXP" +
+                        "\n2nd: 1250 Series EXP" +
+                        "\n3rd: 1000 Series EXP");
+                    ImGui.EndTooltip();
+                }
                 ImGui.Spacing();
                 ImGui.BulletText($"Take 1st Place: {xpResult.FrontlineWin} " + (xpResult.FrontlineWin == 1 ? "time" : "times"));
                 ImGui.BulletText($"Take 2nd Place: {xpResult.FrontlineLose2nd} " + (xpResult.FrontlineLose2nd == 1 ? "time" : "times"));
@@ -96,6 +111,12 @@ namespace Malmstone.Windows
 
                 // Frontlines Roulette Section
                 ImGui.TextColored(new Vector4(0.8f, 0.6f, 0.6f, 1f), "Frontlines (Roulette)");
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.BeginTooltip();
+                    ImGui.Text("An additional 1500 Series EXP on top of Frontline rewards (once per day)");
+                    ImGui.EndTooltip();
+                }
                 ImGui.Spacing();
                 ImGui.BulletText($"Take 1st Place: {xpResult.FrontlineDailyWin} " + (xpResult.FrontlineDailyWin == 1 ? "time" : "times"));
                 ImGui.BulletText($"Take 2nd Place: {xpResult.FrontlineDailyLose2nd} " + (xpResult.FrontlineDailyLose2nd == 1 ? "time" : "times"));
@@ -122,7 +143,7 @@ namespace Malmstone.Windows
                         {
                             if(Plugin.PvPService.ConsecutiveThirdPlaceFrontline == 1)
                             {
-                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "Primed For Bonus: w You'll receive a 10%% reward bonus if you place 3rd");
+                                ImGui.TextColored(new Vector4(0.0f, 1.0f, 0.0f, 1.0f), "Primed For Bonus: You'll receive a 10%% reward bonus if you place 3rd");
                             }
                             if (ImGui.IsItemHovered())
                             {
@@ -178,6 +199,13 @@ namespace Malmstone.Windows
 
                 // Rival Wings Section
                 ImGui.TextColored(new Vector4(0.6f, 0.8f, 0.6f, 1f), "Rival Wings");
+                if (ImGui.IsItemHovered())
+                {
+                    ImGui.BeginTooltip();
+                    ImGui.Text("Win: 1250 Series EXP" +
+                        "\nLose: 750 Series EXP");
+                    ImGui.EndTooltip();
+                }
                 ImGui.Spacing();
                 ImGui.BulletText($"Win: {xpResult.RivalWingsWin} " + (xpResult.RivalWingsWin == 1 ? "time" : "times"));
                 ImGui.BulletText($"Lose: {xpResult.RivalWingsLose} " + (xpResult.RivalWingsLose == 1 ? "time" : "times"));
