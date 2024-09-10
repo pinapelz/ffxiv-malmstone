@@ -164,6 +164,8 @@ namespace Malmstone.Addons
                 Plugin.Configuration.Save();
             }
             Plugin.PvPService.UpdateFrontlineResultCache();
+            Plugin.Logger.Debug("Frontline Record Re-cached As: " + Plugin.PvPService.CachedFrontlineResults.FirstPlace +
+                " Second: " + Plugin.PvPService.CachedFrontlineResults.SecondPlace + " Third: " + Plugin.PvPService.CachedFrontlineResults.ThirdPlace);
         }
 
         private void ShowSeriesProgressionToast(AddonEvent eventType, AddonArgs addonInfo)

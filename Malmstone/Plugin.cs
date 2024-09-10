@@ -13,18 +13,20 @@ using System.Linq;
 using Malmstone.Utils;
 using Malmstone.Addons;
 using Dalamud.Game.Addon.Lifecycle;
+using FFXIVClientStructs.FFXIV.Client.System.Framework;
 
 namespace Malmstone;
 
 public sealed class Plugin : IDalamudPlugin
 {
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
-    [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
     [PluginService] internal static IChatGui Chat { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifeCycle { get; private set; } = null!;
     [PluginService] internal static IToastGui ToastGui { get; private set; } = null!;
     [PluginService] internal static IPluginLog Logger { get; set; } = default!;
+    [PluginService] internal static IClientState ClientState { get; private set; } = null!;
+    [PluginService] internal static IFramework Framework { get; private set; } = null!;
 
     private const string CommandName = "/pmalm";
 
@@ -56,7 +58,7 @@ public sealed class Plugin : IDalamudPlugin
         if (Configuration.ShowMainWindowOnPVPReward)
             EnablePVPRewardWindowAddon();
 
-        PvPService.UpdateFrontlineResultCache();
+        Logger.Debug("Initial Cache: " + PvPService.CachedFrontlineResults.FirstPlace + " " + PvPService.CachedFrontlineResults.SecondPlace + " " + PvPService.CachedFrontlineResults.ThirdPlace);
         if (Configuration.IsPrimedForBuff)
             PvPService.ConsecutiveThirdPlaceFrontline = 1;
 
@@ -76,6 +78,7 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.Draw += DrawUI;
         PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUI;
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
+        Framework.Update += CheckPlayerLoaded;
     }
 
     public void Dispose()
@@ -243,6 +246,20 @@ private void OnCommand(string command, string args)
 }
 
 
+    private void CheckPlayerLoaded(IFramework framework)
+    {
+        if(ClientState.LocalPlayer != null)
+        {
+            if (Configuration.TrackFrontlineBonus)
+            {
+                Logger.Debug("Player has loaded in. Attempting to get Frontline PVP Profile Data");
+                PvPService.UpdateFrontlineResultCache();
+                Logger.Debug("Initial Frontline Data Cached As: First: " + PvPService.CachedFrontlineResults.FirstPlace + 
+                    " Second: " + PvPService.CachedFrontlineResults.SecondPlace + " Third: " + PvPService.CachedFrontlineResults.ThirdPlace);
+                Framework.Update -= CheckPlayerLoaded;
+            }
+        }
+    }
 
     private void DrawUI() => WindowSystem.Draw();
 
