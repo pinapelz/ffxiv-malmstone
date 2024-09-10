@@ -77,6 +77,8 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUI;
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
         Framework.Update += CheckPlayerLoaded;
+        ClientState.Login += OnLogin;
+        ClientState.Logout += OnLogout;
     }
 
     public void Dispose()
@@ -259,6 +261,13 @@ private void OnCommand(string command, string args)
         }
     }
 
+    private void OnLogin()
+    {
+        Logger.Debug("Player has logged in. Waiting for player data to load...");
+        Framework.Update += CheckPlayerLoaded;
+    }
+
+    private void OnLogout() => Framework.Update -= CheckPlayerLoaded;
     private void DrawUI() => WindowSystem.Draw();
 
     public void ToggleConfigUI() => ConfigWindow.Toggle();
