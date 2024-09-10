@@ -57,7 +57,6 @@ public sealed class Plugin : IDalamudPlugin
         if (Configuration.ShowMainWindowOnPVPReward)
             EnablePVPRewardWindowAddon();
 
-        Logger.Debug("Initial Cache: " + PvPService.CachedFrontlineResults.FirstPlace + " " + PvPService.CachedFrontlineResults.SecondPlace + " " + PvPService.CachedFrontlineResults.ThirdPlace);
         if (Configuration.IsPrimedForBuff)
             PvPService.ConsecutiveThirdPlaceFrontline = 1;
 
