@@ -13,7 +13,6 @@ using System.Linq;
 using Malmstone.Utils;
 using Malmstone.Addons;
 using Dalamud.Game.Addon.Lifecycle;
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
 
 namespace Malmstone;
 

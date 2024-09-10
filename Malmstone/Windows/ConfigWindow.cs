@@ -178,6 +178,7 @@ public class ConfigWindow : Window, IDisposable
                 Plugin.PvPAddon.EnableFrontlinePostMatch();
             else if(!trackFrontlineBonus && !Configuration.ShowProgressionChatPostFL)
                 Plugin.PvPAddon.DisableFrontlinePostMatch();
+            Configuration.OutdatedFrontlineRewardBonus = true;
             Configuration.Save();
         }
         if (ImGui.IsItemHovered())
