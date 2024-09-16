@@ -1,5 +1,6 @@
 using Dalamud.Configuration;
 using System;
+using System.Collections.Generic;
 
 namespace Malmstone;
 
@@ -22,6 +23,7 @@ public class Configuration : IPluginConfiguration
     public bool OutdatedFrontlineRewardBonus { get; set; } = false;
     public bool IsPrimedForBuff { get; set; } = false;
     public bool OverrideShowMatchesToDefaultTargetGoal { get; set; } = false;
+    public Dictionary<ulong, int> ExtraLevelsMap { get; set; } = new Dictionary<ulong, int>();
 
     // the below exist just to make saving less cumbersome
     public void Save()

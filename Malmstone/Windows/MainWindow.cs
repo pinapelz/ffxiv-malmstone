@@ -1,7 +1,5 @@
 using System;
 using System.Numerics;
-using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
-using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using Malmstone.Services;
@@ -20,6 +18,8 @@ namespace Malmstone.Windows
         private int _lastTargetSeriesRank;
         private int _lastSeriesExperience;
         private MalmstoneXPCalculator.XpCalculationResult _cachedXpResult;
+        
+        public bool IgnoreSeriesLevelUpdates { get; set; } = false;
 
         public MainWindow(Plugin plugin)
             : base("Malmstone")
@@ -43,7 +43,8 @@ namespace Malmstone.Windows
             var pvpInfo = PvPService.GetPvPSeriesInfo();
             if (pvpInfo != null)
             {
-                ImGui.Text($"Current Series Level: {pvpInfo.CurrentSeriesRank}");
+                var CurrentSeriesLevel = pvpInfo.CurrentSeriesRank + Plugin.GetSavedExtraLevels();
+                ImGui.Text($"Current Series Level: {CurrentSeriesLevel}");
                 ImGui.Text($"Current Level Experience Progress: {pvpInfo.SeriesExperience} EXP");
                 ImGui.Spacing();
 
@@ -54,7 +55,7 @@ namespace Malmstone.Windows
                 if (TargetSeriesRank < 1) TargetSeriesRank = 1;
                 if (TargetSeriesRank > 107397) TargetSeriesRank = 107397;
 
-                if (TargetSeriesRank <= pvpInfo.CurrentSeriesRank) TargetSeriesRank = pvpInfo.CurrentSeriesRank + 1;
+                if (TargetSeriesRank <= CurrentSeriesLevel) TargetSeriesRank = CurrentSeriesLevel + 1;
 
                 ImGui.Spacing();
                 ImGui.Separator();
@@ -64,7 +65,7 @@ namespace Malmstone.Windows
                     TargetSeriesRank != _lastTargetSeriesRank ||
                     pvpInfo.SeriesExperience != _lastSeriesExperience)
                 {
-                    _cachedXpResult = MalmstoneXPCalculator.CalculateXp(pvpInfo.CurrentSeriesRank, TargetSeriesRank, pvpInfo.SeriesExperience);
+                    _cachedXpResult = MalmstoneXPCalculator.CalculateXp(CurrentSeriesLevel, TargetSeriesRank, pvpInfo.SeriesExperience);
                     _lastSeriesRank = pvpInfo.CurrentSeriesRank;
                     _lastTargetSeriesRank = TargetSeriesRank;
                     _lastSeriesExperience = pvpInfo.SeriesExperience;
@@ -226,12 +227,12 @@ namespace Malmstone.Windows
                 ImGui.Text("PvP Profile is not loaded.");
             }
         }
-        public void OnOpenPVPRewardWindow(AddonEvent eventType, AddonArgs addonInfo)
+        public void OnOpenPVPRewardWindow()
         {
             IsOpen = true;
         }
 
-        public void OnClosePVPRewardWindow(AddonEvent eventType, AddonArgs addonInfo)
+        public void OnClosePVPRewardWindow()
         {
             IsOpen = false;
         }

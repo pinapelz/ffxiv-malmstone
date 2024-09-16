@@ -269,10 +269,6 @@ public class ConfigWindow : Window, IDisposable
             var showMainWindowOnPVPReward = Configuration.ShowMainWindowOnPVPReward;
             if (ImGui.Checkbox("##ShowMainWindowOnPVPReward", ref showMainWindowOnPVPReward))
             {
-                if (showMainWindowOnPVPReward)
-                    Plugin.EnablePVPRewardWindowAddon();
-                else
-                    Plugin.DisablePVPRewardWindowAddon();
                 Configuration.ShowMainWindowOnPVPReward = showMainWindowOnPVPReward;
                 Configuration.Save();
             }

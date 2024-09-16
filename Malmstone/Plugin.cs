@@ -13,6 +13,7 @@ using System.Linq;
 using Malmstone.Utils;
 using Malmstone.Addons;
 using Dalamud.Game.Addon.Lifecycle;
+using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 
 namespace Malmstone;
 
@@ -37,6 +38,7 @@ public sealed class Plugin : IDalamudPlugin
 
     internal readonly PvPService PvPService;
     internal PvPMatchAddon PvPAddon;
+    internal int CachedSeriesLevel;
 
     public Plugin()
     {
@@ -116,9 +118,13 @@ private void OnCommand(string command, string args)
     var pvpInfo = PvPService.GetPvPSeriesInfo();
 
     if (pvpInfo == null) return;
+    var CurrentSeriesLevel = pvpInfo.CurrentSeriesRank + GetSavedExtraLevels(); 
     if (!int.TryParse(splitArgs[0], out int targetRank))
     {
-        if (splitArgs[0] == "next") targetRank = pvpInfo.CurrentSeriesRank + 1;
+        if (splitArgs[0] == "next")
+        {
+            targetRank = CurrentSeriesLevel + 1;
+        }
         else if (splitArgs[0] == "config")
         {
             ToggleConfigUI();
@@ -141,14 +147,14 @@ private void OnCommand(string command, string args)
         return;
     }
 
-    if (targetRank < pvpInfo.CurrentSeriesRank)
+    if (targetRank < CurrentSeriesLevel)
     {
         Chat.PrintError("You've already surpassed Rank " + targetRank);
         return;
     }
 
     var xpResult = MalmstoneXPCalculator.CalculateXp(
-        pvpInfo.CurrentSeriesRank,
+        CurrentSeriesLevel,
         targetRank,
         pvpInfo.SeriesExperience);
 
@@ -232,9 +238,9 @@ private void OnCommand(string command, string args)
         if (xpResult.RivalWingsWin > 0)
         {
             seString.Append(new TextPayload($"Win: {xpResult.RivalWingsWin} " + (xpResult.RivalWingsWin == 1 ? "time" : "times") + "\n"));
-            }
-
-            if (xpResult.RivalWingsLose > 0)
+        }
+        
+        if (xpResult.RivalWingsLose > 0)
         {
             seString.Append(new TextPayload($"Lose: {xpResult.RivalWingsLose} " + (xpResult.RivalWingsLose == 1 ? "time" : "times") + "\n"));
         }
@@ -273,15 +279,83 @@ private void OnCommand(string command, string args)
     public void ToggleConfigUI() => ConfigWindow.Toggle();
     public void ToggleMainUI() => MainWindow.Toggle();
 
+    public void OnOpenPVPRewardWindow(AddonEvent eventType, AddonArgs addonInfo)
+    {
+        if(PvPService.GetPvPSeriesInfo() != null)
+            CachedSeriesLevel = PvPService.GetPvPSeriesInfo().CurrentSeriesRank;
+        Logger.Debug("PVPRewardWindow Open, Current Series Level Cached: " + CachedSeriesLevel);
+        MainWindow.OnOpenPVPRewardWindow();
+    }
+
+    public void OnClosePVPRewardWindow(AddonEvent eventType, AddonArgs addonInfo) =>
+        MainWindow.OnClosePVPRewardWindow();
+
+    public void UpdateExtraLevels(AddonEvent eventType, AddonArgs addonInfo)
+    {
+        if (PvPService.GetPvPSeriesInfo() != null)
+        {
+            // If player claimed Extra Level reward (above Level 30) and we detect a decrease in Series level
+            if(PvPService.GetPvPSeriesInfo().CurrentSeriesRank < CachedSeriesLevel && CachedSeriesLevel > 30)
+            {
+                var extraLevels = CachedSeriesLevel - 30;
+                Logger.Debug("Player claimed extra levels: " +  extraLevels+ ", new ExtraLevels is " + GetSavedExtraLevels() + extraLevels);
+                IncrementExtraLevels(extraLevels);
+                Configuration.Save();
+            }
+            else
+            {
+                Logger.Debug("Player did not claim any extra ranks");
+            }
+        }
+    }
+    
+    public int GetSavedExtraLevels()
+    {
+        ulong contentId = ClientState.LocalContentId;
+        if (Configuration.ExtraLevelsMap.TryGetValue(contentId, out var extraLevels))
+        {
+            return extraLevels;
+        }
+        Logger.Debug("No Extra Levels saved for this character");
+        int CurrentSeriesLevel = PvPService.GetPvPSeriesInfo()?.CurrentSeriesRank ?? 0;
+        if (CurrentSeriesLevel > 30)
+        {
+            Configuration.ExtraLevelsMap[contentId] = CurrentSeriesLevel - 30;
+            Configuration.Save();
+            Logger.Debug("Extra Levels saved for this character: " + (CurrentSeriesLevel - 30));
+            return CurrentSeriesLevel - 30;
+        }
+        Logger.Debug("Extra Levels saved for this character: 0");
+        Configuration.ExtraLevelsMap[contentId] = 0;
+        Configuration.Save();
+        return 0;
+    }
+
+    public bool IncrementExtraLevels(int amount)
+    {
+        ulong contentId = ClientState.LocalContentId;
+        if (Configuration.ExtraLevelsMap.TryGetValue(contentId, out var extraLevels))
+        {
+            Configuration.ExtraLevelsMap[contentId] = extraLevels + amount;
+            Configuration.Save();
+            Logger.Debug("Extra Levels incremented for this character: " + (extraLevels + amount));
+            return true;
+        }
+        Logger.Debug("Failed to increment extra levels for this character");
+        return false;
+    }
+
     public void EnablePVPRewardWindowAddon()
     {
-        AddonLifeCycle.RegisterListener(AddonEvent.PostSetup, "PvpReward", MainWindow.OnOpenPVPRewardWindow);
-        AddonLifeCycle.RegisterListener(AddonEvent.PreFinalize, "PvpReward", MainWindow.OnClosePVPRewardWindow);
+        AddonLifeCycle.RegisterListener(AddonEvent.PostSetup, "PvpReward", OnOpenPVPRewardWindow);
+        AddonLifeCycle.RegisterListener(AddonEvent.PostRefresh, "PvpReward", UpdateExtraLevels);
+        AddonLifeCycle.RegisterListener(AddonEvent.PreFinalize, "PvpReward", OnClosePVPRewardWindow);
     }
     public void DisablePVPRewardWindowAddon()
     {
-        AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "PvpReward", MainWindow.OnOpenPVPRewardWindow);
-        AddonLifeCycle.UnregisterListener(AddonEvent.PreFinalize, "PvpReward", MainWindow.OnClosePVPRewardWindow);
+        AddonLifeCycle.UnregisterListener(AddonEvent.PostSetup, "PvpReward", OnOpenPVPRewardWindow);
+        AddonLifeCycle.UnregisterListener(AddonEvent.PostRefresh, "PvpReward", UpdateExtraLevels);
+        AddonLifeCycle.UnregisterListener(AddonEvent.PreFinalize, "PvpReward", OnClosePVPRewardWindow);
     }
 
 }
