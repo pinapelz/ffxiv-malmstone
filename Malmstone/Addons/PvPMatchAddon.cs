@@ -200,13 +200,16 @@ namespace Malmstone.Addons
         {
             if (Plugin.Configuration.SkipProgressionChatAfterGoal && seriesInfo.CurrentSeriesRank >= Plugin.Configuration.DefaultTargetRankProperty) return;
             var seString = new SeString(new List<Payload>());
+            int TargetGoal = seriesInfo.CurrentSeriesRank + 1;
+            if(Plugin.Configuration.OverrideShowMatchesToDefaultTargetGoal && Plugin.Configuration.DefaultTargetRankProperty > seriesInfo.CurrentSeriesRank) 
+                TargetGoal = Plugin.Configuration.DefaultTargetRankProperty;
             switch (contentType)
             {
                 case PvPContentType.CrystallineConflict:
                     MalmstoneXPCalculator.XpCalculationResult ccResultData = MalmstoneXPCalculator.CalculateCrystallineConflictMatches(
-                        seriesInfo.CurrentSeriesRank, seriesInfo.CurrentSeriesRank + 1, seriesInfo.SeriesExperience);
+                        seriesInfo.CurrentSeriesRank, TargetGoal, seriesInfo.SeriesExperience);
                     if (ccResultData.CrystallineConflictLose == 0) break;
-                    seString.Append(new TextPayload("[Crystalline Conflict to Level " + (seriesInfo.CurrentSeriesRank + 1) + "]\n"));
+                    seString.Append(new TextPayload("[Crystalline Conflict to Level " + TargetGoal + "]\n"));
                     seString.Append(new UIForegroundPayload(35));
                     seString.Append(new TextPayload($"Win: {ccResultData.CrystallineConflictWin} " + (ccResultData.CrystallineConflictWin == 1 ? "time" : "times") + "\n"));
                     seString.Append(new TextPayload($"Lose: {ccResultData.CrystallineConflictLose} " + (ccResultData.CrystallineConflictLose == 1 ? "time" : "times")));
@@ -214,9 +217,9 @@ namespace Malmstone.Addons
                     break;
                 case PvPContentType.Frontlines:
                     MalmstoneXPCalculator.XpCalculationResult flResultData = MalmstoneXPCalculator.CalculateFrontlineMatches(
-                        seriesInfo.CurrentSeriesRank, seriesInfo.CurrentSeriesRank + 1, seriesInfo.SeriesExperience);
+                        seriesInfo.CurrentSeriesRank, TargetGoal, seriesInfo.SeriesExperience);
                     if (flResultData.FrontlineDailyLose3rd == 0) break;
-                    seString.Append(new TextPayload("[Frontlines to Level " + (seriesInfo.CurrentSeriesRank + 1) + "]\n"));
+                    seString.Append(new TextPayload("[Frontlines to Level " + TargetGoal+ "]\n"));
                     seString.Append(new UIForegroundPayload(518));
                     seString.Append(new TextPayload($"Take 1st Place: {flResultData.FrontlineWin} " + (flResultData.FrontlineWin == 1 ? "time" : "times") +" (" + (flResultData.FrontlineDailyWin) + ")\n"));
                     seString.Append(new TextPayload($"Take 2nd Place: {flResultData.FrontlineWin} " + (flResultData.FrontlineWin == 1 ? "time" : "times") + " (" + (flResultData.FrontlineDailyLose2nd) + ")\n"));
@@ -226,9 +229,9 @@ namespace Malmstone.Addons
                     break;
                 case PvPContentType.RivalWings:
                     MalmstoneXPCalculator.XpCalculationResult rwResultData = MalmstoneXPCalculator.CalculateRivalWingsMatches(
-                        seriesInfo.CurrentSeriesRank, seriesInfo.CurrentSeriesRank + 1, seriesInfo.SeriesExperience);
+                        seriesInfo.CurrentSeriesRank, TargetGoal, seriesInfo.SeriesExperience);
                     if (rwResultData.RivalWingsLose == 0) break;
-                    seString.Append(new TextPayload("[Rival Wings to Level " + (seriesInfo.CurrentSeriesRank + 1) + "]\n"));
+                    seString.Append(new TextPayload("[Rival Wings to Level " + TargetGoal + "]\n"));
                     seString.Append(new UIForegroundPayload(43));
                     seString.Append(new TextPayload($"Win: {rwResultData.RivalWingsWin} " + (rwResultData.RivalWingsWin == 1 ? "time" : "times") + "\n"));
                     seString.Append(new TextPayload($"Lose: {rwResultData.RivalWingsLose} " + (rwResultData.RivalWingsLose == 1 ? "time" : "times")));

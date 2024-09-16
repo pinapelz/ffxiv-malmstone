@@ -16,7 +16,7 @@ public class ConfigWindow : Window, IDisposable
         Flags = ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(540, 380),
+            MinimumSize = new Vector2(540, 390),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
         Configuration = Plugin.Configuration;
@@ -212,6 +212,21 @@ public class ConfigWindow : Window, IDisposable
         }
         ImGui.SameLine();
         ImGui.Text("Rival Wings");
+        
+        var OverrideShowMatchesToDefaultTargetGoal = Configuration.OverrideShowMatchesToDefaultTargetGoal;
+        if(ImGui.Checkbox("##OverrideShowMatchesToDefaultTargetGoal", ref OverrideShowMatchesToDefaultTargetGoal)){
+            Configuration.OverrideShowMatchesToDefaultTargetGoal = OverrideShowMatchesToDefaultTargetGoal;
+            Configuration.Save();
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("Show remaining matches to the Default Target rank instead of the next rank for postmatch chat notifications" +
+                       "\nThis only works if the Default Target rank is higher than your current rank, otherwise this setting will be ignored");
+            ImGui.EndTooltip();
+        }
+        ImGui.SameLine();
+        ImGui.Text("Show matches until Default Target Rank instead of next rank");
 
 
         ImGui.Separator();
