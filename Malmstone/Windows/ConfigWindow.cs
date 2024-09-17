@@ -294,7 +294,8 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
-                ImGui.Text("Show plugin tracked Series Level in the PVP Reward window (supports Series Levels above 30)");
+                ImGui.Text("Show plugin tracked Series Level in the PVP Reward window (supports Series Levels above 30)" +
+                           "\n[This modifies the game's native UI]");
                 ImGui.EndTooltip();
             }
             ImGui.SameLine();
@@ -313,7 +314,8 @@ public class ConfigWindow : Window, IDisposable
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
-                ImGui.Text("Show plugin tracked Series Level in the PVP Profile window (supports Series Levels above 30)");
+                ImGui.Text("Show plugin tracked Series Level in the PVP Profile window (supports Series Levels above 30)" +
+                           "\n[This modifies the game's native UI]");
                 ImGui.EndTooltip();
             }
             ImGui.SameLine();
