@@ -38,6 +38,7 @@ public sealed class Plugin : IDalamudPlugin
 
     internal readonly PvPService PvPService;
     internal PvPMatchAddon PvPAddon;
+    internal UIChanger UIChanger;
     internal int CachedSeriesLevel;
 
     public Plugin()
@@ -48,6 +49,7 @@ public sealed class Plugin : IDalamudPlugin
         MainWindow = new MainWindow(this);
         PvPService = new PvPService();
         PvPAddon = new PvPMatchAddon(this);
+        UIChanger = new UIChanger(this);
         if (Configuration.ShowProgressionChatPostCC)
             PvPAddon.EnableCrystallineConflictPostMatch();
         if (Configuration.ShowProgressionChatPostRW)
@@ -56,8 +58,12 @@ public sealed class Plugin : IDalamudPlugin
             PvPAddon.EnableFrontlinePostMatch();
         if (Configuration.ShowProgressionToastPostMatch)
             PvPAddon.EnablePostMatchProgressionToast();
-        if (Configuration.ShowMainWindowOnPVPReward)
-            EnablePVPRewardWindowAddon();
+        if(Configuration.ShowTrueSeriesLevelPVPProfile)
+            EnablePVPProfileReplaceSeriesLevel();
+        if(Configuration.ShowTrueSeriesLevelPVPReward)
+            EnablePVPRewardReplaceSeriesLevel();
+            
+        EnablePVPRewardWindowAddon();
 
         if (Configuration.IsPrimedForBuff)
             PvPService.ConsecutiveThirdPlaceFrontline = 1;
@@ -98,8 +104,11 @@ public sealed class Plugin : IDalamudPlugin
             PvPAddon.DisableFrontlinePostMatch();
         if (Configuration.ShowProgressionToastPostMatch)
             PvPAddon.DisablePostMatchProgressionToast();
-        if(Configuration.ShowMainWindowOnPVPReward)
-            DisablePVPRewardWindowAddon();
+        if (Configuration.ShowTrueSeriesLevelPVPProfile)
+            DisablePVPProfileReplaceSeriesLevel();
+        if (Configuration.ShowTrueSeriesLevelPVPReward)
+            DisablePVPRewardReplaceSeriesLevel();
+        DisablePVPRewardWindowAddon();
         
         CommandManager.RemoveHandler(CommandName);
     }
@@ -281,8 +290,9 @@ private void OnCommand(string command, string args)
 
     public void OnOpenPVPRewardWindow(AddonEvent eventType, AddonArgs addonInfo)
     {
-        if(PvPService.GetPvPSeriesInfo() != null)
-            CachedSeriesLevel = PvPService.GetPvPSeriesInfo().CurrentSeriesRank;
+        PvPSeriesInfo? PvPSeriesInfo = PvPService.GetPvPSeriesInfo();
+        if(PvPSeriesInfo != null)
+            CachedSeriesLevel = PvPSeriesInfo.CurrentSeriesRank;
         Logger.Debug("PVPRewardWindow Open, Current Series Level Cached: " + CachedSeriesLevel);
         MainWindow.OnOpenPVPRewardWindow();
     }
@@ -294,13 +304,18 @@ private void OnCommand(string command, string args)
     {
         if (PvPService.GetPvPSeriesInfo() != null)
         {
+            // TODO NEED TESTING!!! 
             // If player claimed Extra Level reward (above Level 30) and we detect a decrease in Series level
-            if(PvPService.GetPvPSeriesInfo().CurrentSeriesRank < CachedSeriesLevel && CachedSeriesLevel > 30)
+            PvPSeriesInfo? PvPSeriesInfo = PvPService.GetPvPSeriesInfo();
+            if (PvPSeriesInfo == null)
+                return;
+            if(PvPSeriesInfo.CurrentSeriesRank < CachedSeriesLevel && CachedSeriesLevel > 30)
             {
                 var extraLevels = CachedSeriesLevel - 30;
                 Logger.Debug("Player claimed extra levels: " +  extraLevels+ ", new ExtraLevels is " + GetSavedExtraLevels() + extraLevels);
                 IncrementExtraLevels(extraLevels);
                 Configuration.Save();
+                
             }
             else
             {
@@ -357,6 +372,11 @@ private void OnCommand(string command, string args)
         AddonLifeCycle.UnregisterListener(AddonEvent.PostRefresh, "PvpReward", UpdateExtraLevels);
         AddonLifeCycle.UnregisterListener(AddonEvent.PreFinalize, "PvpReward", OnClosePVPRewardWindow);
     }
+    
+    public void EnablePVPProfileReplaceSeriesLevel() => AddonLifeCycle.RegisterListener(AddonEvent.PostDraw, "PvpProfile", UIChanger.ReplacePVPProfileWindowSeriesRank);
+    public void DisablePVPProfileReplaceSeriesLevel() => AddonLifeCycle.UnregisterListener(AddonEvent.PostDraw, "PvpProfile", UIChanger.ReplacePVPProfileWindowSeriesRank);
+    public void EnablePVPRewardReplaceSeriesLevel() => AddonLifeCycle.RegisterListener(AddonEvent.PostDraw, "PvpReward", UIChanger.ReplacePVPRewardWindowSeriesRank);
+    public void DisablePVPRewardReplaceSeriesLevel() => AddonLifeCycle.UnregisterListener(AddonEvent.PostDraw, "PvpReward", UIChanger.ReplacePVPRewardWindowSeriesRank);
 
 }
 

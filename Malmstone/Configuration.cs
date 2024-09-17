@@ -24,6 +24,8 @@ public class Configuration : IPluginConfiguration
     public bool IsPrimedForBuff { get; set; } = false;
     public bool OverrideShowMatchesToDefaultTargetGoal { get; set; } = false;
     public Dictionary<ulong, int> ExtraLevelsMap { get; set; } = new Dictionary<ulong, int>();
+    public bool ShowTrueSeriesLevelPVPReward { get; set; } = true;
+    public bool ShowTrueSeriesLevelPVPProfile { get; set; } = true;
 
     // the below exist just to make saving less cumbersome
     public void Save()

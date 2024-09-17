@@ -280,6 +280,46 @@ public class ConfigWindow : Window, IDisposable
             }
             ImGui.SameLine();
             ImGui.Text("Show calculations when viewing Series Malmstones");
+            ImGui.Separator();
+            var showTrueSeriesLevelPVPReward = Configuration.ShowTrueSeriesLevelPVPReward;
+            if (ImGui.Checkbox("##ShowTrueSeriesLevelPVPReward", ref showTrueSeriesLevelPVPReward))
+            {
+                if (showTrueSeriesLevelPVPReward)
+                    Plugin.EnablePVPRewardReplaceSeriesLevel();
+                else
+                    Plugin.DisablePVPRewardReplaceSeriesLevel();
+                Configuration.ShowTrueSeriesLevelPVPReward = showTrueSeriesLevelPVPReward;
+                Configuration.Save();
+            }
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.Text("Show plugin tracked Series Level in the PVP Reward window (supports Series Levels above 30)");
+                ImGui.EndTooltip();
+            }
+            ImGui.SameLine();
+            ImGui.Text("Show true Series Level in PVP Reward window");
+            
+            var showTrueSeriesLevelPVPProfile = Configuration.ShowTrueSeriesLevelPVPProfile;
+            if (ImGui.Checkbox("##ShowTrueSeriesLevelPVPProfile", ref showTrueSeriesLevelPVPProfile))
+            {
+                if (showTrueSeriesLevelPVPProfile)
+                    Plugin.EnablePVPProfileReplaceSeriesLevel();
+                else
+                    Plugin.DisablePVPProfileReplaceSeriesLevel();
+                Configuration.ShowTrueSeriesLevelPVPProfile = showTrueSeriesLevelPVPProfile;
+                Configuration.Save();
+            }
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.BeginTooltip();
+                ImGui.Text("Show plugin tracked Series Level in the PVP Profile window (supports Series Levels above 30)");
+                ImGui.EndTooltip();
+            }
+            ImGui.SameLine();
+            ImGui.Text("Show true Series Level in PVP Profile window");
+            
+            
             ImGui.EndTabItem();
         }
 
