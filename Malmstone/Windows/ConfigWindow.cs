@@ -298,7 +298,7 @@ public class ConfigWindow : Window, IDisposable
                 ImGui.EndTooltip();
             }
             ImGui.SameLine();
-            ImGui.Text("Show true Series Level in PVP Reward window");
+            ImGui.Text("Show Series Level Above 30 in PVP Reward window");
             
             var showTrueSeriesLevelPVPProfile = Configuration.ShowTrueSeriesLevelPVPProfile;
             if (ImGui.Checkbox("##ShowTrueSeriesLevelPVPProfile", ref showTrueSeriesLevelPVPProfile))
@@ -317,7 +317,7 @@ public class ConfigWindow : Window, IDisposable
                 ImGui.EndTooltip();
             }
             ImGui.SameLine();
-            ImGui.Text("Show true Series Level in PVP Profile window");
+            ImGui.Text("Show Series Level Above 30 in PVP Profile window");
             
             
             ImGui.EndTabItem();

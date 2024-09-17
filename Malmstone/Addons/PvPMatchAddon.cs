@@ -172,24 +172,25 @@ namespace Malmstone.Addons
         {
             PvPSeriesInfo? seriesInfo = Plugin.PvPService.GetPvPSeriesInfo();
             if (seriesInfo == null) return;
-            if (Plugin.Configuration.SkipProgressionToastAfterGoal && seriesInfo.CurrentSeriesRank >= Plugin.Configuration.DefaultTargetRankProperty) return;
+            var CurrentSeriesLevel = seriesInfo.CurrentSeriesRank + Plugin.GetSavedExtraLevels();
+            if (Plugin.Configuration.SkipProgressionToastAfterGoal && CurrentSeriesLevel >= Plugin.Configuration.DefaultTargetRankProperty) return;
                     
             switch (Plugin.Configuration.PostmatchProgressionToastType)
             {
                 case 0:
-                    Plugin.ToastGui.ShowNormal("Series Level " + seriesInfo.CurrentSeriesRank +
+                    Plugin.ToastGui.ShowNormal("Series Level " + CurrentSeriesLevel +
                         "     " + seriesInfo.SeriesExperience + "/" + MalmstoneXPCalculator.GetXPTargetForCurrentLevel(seriesInfo.CurrentSeriesRank) + " EXP");
                     break;
                 case 1:
-                    Plugin.ToastGui.ShowQuest("Series Level " + seriesInfo.CurrentSeriesRank +
+                    Plugin.ToastGui.ShowQuest("Series Level " + CurrentSeriesLevel +
                         "     " + seriesInfo.SeriesExperience + "/" + MalmstoneXPCalculator.GetXPTargetForCurrentLevel(seriesInfo.CurrentSeriesRank) + " EXP");
                     break;
                 case 2:
-                    Plugin.ToastGui.ShowError("Series Level " + seriesInfo.CurrentSeriesRank +
+                    Plugin.ToastGui.ShowError("Series Level " + CurrentSeriesLevel +
                         "     " + seriesInfo.SeriesExperience + "/" + MalmstoneXPCalculator.GetXPTargetForCurrentLevel(seriesInfo.CurrentSeriesRank) + " EXP");
                     break;
                 default:
-                    Plugin.ToastGui.ShowNormal("Series Level " + seriesInfo.CurrentSeriesRank +
+                    Plugin.ToastGui.ShowNormal("Series Level " + CurrentSeriesLevel +
                         "     " + seriesInfo.SeriesExperience + "/" + MalmstoneXPCalculator.GetXPTargetForCurrentLevel(seriesInfo.CurrentSeriesRank) + " EXP");
                     break;
             }
@@ -200,14 +201,15 @@ namespace Malmstone.Addons
         {
             if (Plugin.Configuration.SkipProgressionChatAfterGoal && seriesInfo.CurrentSeriesRank >= Plugin.Configuration.DefaultTargetRankProperty) return;
             var seString = new SeString(new List<Payload>());
-            int TargetGoal = seriesInfo.CurrentSeriesRank + 1;
-            if(Plugin.Configuration.OverrideShowMatchesToDefaultTargetGoal && Plugin.Configuration.DefaultTargetRankProperty > seriesInfo.CurrentSeriesRank) 
+            var CurrentSeriesLevel = seriesInfo.CurrentSeriesRank + Plugin.GetSavedExtraLevels();
+            int TargetGoal = CurrentSeriesLevel + 1;
+            if(Plugin.Configuration.OverrideShowMatchesToDefaultTargetGoal && Plugin.Configuration.DefaultTargetRankProperty > CurrentSeriesLevel) 
                 TargetGoal = Plugin.Configuration.DefaultTargetRankProperty;
             switch (contentType)
             {
                 case PvPContentType.CrystallineConflict:
                     MalmstoneXPCalculator.XpCalculationResult ccResultData = MalmstoneXPCalculator.CalculateCrystallineConflictMatches(
-                        seriesInfo.CurrentSeriesRank, TargetGoal, seriesInfo.SeriesExperience);
+                        CurrentSeriesLevel, TargetGoal, seriesInfo.SeriesExperience);
                     if (ccResultData.CrystallineConflictLose == 0) break;
                     seString.Append(new TextPayload("[Crystalline Conflict to Level " + TargetGoal + "]\n"));
                     seString.Append(new UIForegroundPayload(35));
@@ -217,7 +219,7 @@ namespace Malmstone.Addons
                     break;
                 case PvPContentType.Frontlines:
                     MalmstoneXPCalculator.XpCalculationResult flResultData = MalmstoneXPCalculator.CalculateFrontlineMatches(
-                        seriesInfo.CurrentSeriesRank, TargetGoal, seriesInfo.SeriesExperience);
+                        CurrentSeriesLevel, TargetGoal, seriesInfo.SeriesExperience);
                     if (flResultData.FrontlineDailyLose3rd == 0) break;
                     seString.Append(new TextPayload("[Frontlines to Level " + TargetGoal+ "]\n"));
                     seString.Append(new UIForegroundPayload(518));
@@ -229,7 +231,7 @@ namespace Malmstone.Addons
                     break;
                 case PvPContentType.RivalWings:
                     MalmstoneXPCalculator.XpCalculationResult rwResultData = MalmstoneXPCalculator.CalculateRivalWingsMatches(
-                        seriesInfo.CurrentSeriesRank, TargetGoal, seriesInfo.SeriesExperience);
+                        CurrentSeriesLevel, TargetGoal, seriesInfo.SeriesExperience);
                     if (rwResultData.RivalWingsLose == 0) break;
                     seString.Append(new TextPayload("[Rival Wings to Level " + TargetGoal + "]\n"));
                     seString.Append(new UIForegroundPayload(43));
