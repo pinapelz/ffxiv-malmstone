@@ -129,8 +129,11 @@ namespace Malmstone.Utils
                 if (goalLevel > PvpLevels.Length)
                 {
                     currentLevel = PvpLevels.Length;
-                    currentProgress = 0;
                 }
+            }
+            else
+            {
+                remainingXp -= currentProgress;
             }
             if (goalLevel > PvpLevels.Length)
             {
