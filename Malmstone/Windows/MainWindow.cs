@@ -75,6 +75,12 @@ namespace Malmstone.Windows
 
                 ImGui.Spacing();
                 ImGui.Text($"You have {xpResult.RemainingXp} remaining series EXP to go until you reach level {xpResult.TargetLevel}");
+                
+                // If player has 100 unclaimed series levels (+30 for all main malmstones)
+                if(pvpInfo.CurrentSeriesRank > 130)
+                    ImGui.TextColored(new Vector4(1.0f, 0.0f, 0.0f, 1.0f),"You must really love PVP... Congrats on maxing out Series Malmstone" +
+                                                                          "\nThe Infinite Level is known to max out at 100 unclaimed rewards" +
+                                                                          "\nYou will not gain additional Series EXP until you claim them!");
 
                 ImGui.Spacing();
                 ImGui.Separator();
