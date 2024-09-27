@@ -3,7 +3,7 @@
   <Import Project="Dalamud.Plugin.Bootstrap.targets" />
 
   <PropertyGroup>
-    <Version>1.0.7.0</Version>
+    <Version>1.0.7.1</Version>
     <Description>A PVP Series Malmstones Level Calculator</Description>
     <PackageProjectUrl>https://github.com/goatcorp/Malmstone</PackageProjectUrl>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>

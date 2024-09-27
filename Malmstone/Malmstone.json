@@ -2,7 +2,7 @@
     "Author": "pinapelz",
     "Name": "Malmstone Calculator",
     "Punchline": "Keep tabs on how much more PVP you have to play before unlocking your next Series Malmstone reward!",
-    "Description": "Calculate the number of wins/losses needed in different modes of PVP before achieving your target Series Level.\nUse /pmalm to get started",
+    "Description": "Calculates the number of wins/losses needed in different modes of PVP before achieving your target Series Level\n- Receive post-match notifications about progress towards next series level\n- Track and display Series Level above 30\n- Calculate Frontline losing streak bonus rewards\n\nUse /pmalm to get started",
     "ApplicableVersion": "any",
     "Tags": [
         "pvp",
