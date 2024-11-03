@@ -304,18 +304,19 @@ private void OnCommand(string command, string args)
     {
         if (PvPService.GetPvPSeriesInfo() != null)
         {
-            // TODO NEED TESTING!!! 
             // If player claimed Extra Level reward (above Level 30) and we detect a decrease in Series level
             PvPSeriesInfo? PvPSeriesInfo = PvPService.GetPvPSeriesInfo();
             if (PvPSeriesInfo == null)
                 return;
-            if(PvPSeriesInfo.CurrentSeriesRank < CachedSeriesLevel && CachedSeriesLevel > 30)
+            if(PvPSeriesInfo.CurrentSeriesRank < CachedSeriesLevel && CachedSeriesLevel > 30)   
             {
-                var extraLevels = CachedSeriesLevel - 30;
-                Logger.Debug("Player claimed extra levels: " +  extraLevels+ ", new ExtraLevels is " + GetSavedExtraLevels() + extraLevels);
-                IncrementExtraLevels(extraLevels);
+                Logger.Debug("Player claimed extra levels: Old Level is " + GetSavedExtraLevels());
+                if (IncrementExtraLevels(1))
+                    Logger.Debug("Successfully incremented extra levels for player");
+                else
+                    Logger.Debug("Failed to increment extra levels for player");
                 Configuration.Save();
-                
+                CachedSeriesLevel = PvPSeriesInfo.CurrentSeriesRank;
             }
             else
             {
