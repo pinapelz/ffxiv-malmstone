@@ -280,7 +280,10 @@ public class ConfigWindow : Window, IDisposable
             }
             ImGui.SameLine();
             ImGui.Text("Show calculations when viewing Series Malmstones");
+            
             ImGui.Separator();
+
+            ImGui.Text("Display Tracked Series Level Above 30 in...");
             var showTrueSeriesLevelPVPReward = Configuration.ShowTrueSeriesLevelPVPReward;
             if (ImGui.Checkbox("##ShowTrueSeriesLevelPVPReward", ref showTrueSeriesLevelPVPReward))
             {
@@ -299,7 +302,7 @@ public class ConfigWindow : Window, IDisposable
                 ImGui.EndTooltip();
             }
             ImGui.SameLine();
-            ImGui.Text("Show Series Level Above 30 in PVP Reward window");
+            ImGui.Text("PVP Reward window");
             
             var showTrueSeriesLevelPVPProfile = Configuration.ShowTrueSeriesLevelPVPProfile;
             if (ImGui.Checkbox("##ShowTrueSeriesLevelPVPProfile", ref showTrueSeriesLevelPVPProfile))
@@ -319,7 +322,7 @@ public class ConfigWindow : Window, IDisposable
                 ImGui.EndTooltip();
             }
             ImGui.SameLine();
-            ImGui.Text("Show Series Level Above 30 in PVP Profile window");
+            ImGui.Text("PVP Profile window");
             
             
             ImGui.EndTabItem();
