@@ -265,6 +265,19 @@ private void OnCommand(string command, string args)
     {
         if(ClientState.LocalPlayer != null)
         {
+            ulong contentId = ClientState.LocalContentId;
+            int CurrentSeriesLevel = PvPService.GetPvPSeriesInfo()?.CurrentSeriesRank ?? 0;
+            if (Configuration.ExtraLevelsMap.TryGetValue(contentId, out var extraLevels))
+            {
+                if(extraLevels >= 1 && CurrentSeriesLevel < 30)
+                {
+                    Logger.Debug("Extra Levels has expired likely due to a new Series Malmstone. Resetting to 0");
+                    Configuration.ExtraLevelsMap[contentId] = 0;
+                    Configuration.Save();
+                }
+            }
+
+
             if (Configuration.TrackFrontlineBonus)
             {
                 Logger.Debug("Player has loaded in. Attempting to get Frontline PVP Profile Data");
