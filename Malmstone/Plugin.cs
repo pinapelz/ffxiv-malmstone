@@ -295,7 +295,7 @@ private void OnCommand(string command, string args)
         Framework.Update += CheckPlayerLoaded;
     }
 
-    private void OnLogout() => Framework.Update -= CheckPlayerLoaded;
+    private void OnLogout(int _, int __) => Framework.Update -= CheckPlayerLoaded;
     private void DrawUI() => WindowSystem.Draw();
 
     public void ToggleConfigUI() => ConfigWindow.Toggle();
