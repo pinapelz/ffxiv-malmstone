@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="Dalamud.Plugin.Bootstrap.targets" />
-
+  <Project Sdk="Dalamud.NET.Sdk/12.0.2">
   <PropertyGroup>
-    <Version>1.0.7.3</Version>
+    <Version>1.0.7.4</Version>
     <Description>A PVP Series Malmstones Level Calculator</Description>
     <PackageProjectUrl>https://github.com/goatcorp/Malmstone</PackageProjectUrl>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
@@ -11,6 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Update="DalamudPackager" Version="11.0.0" />
+    <PackageReference Update="DalamudPackager" Version="12.0.0" />
   </ItemGroup>
 </Project>
