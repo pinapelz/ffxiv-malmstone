@@ -1,6 +1,9 @@
 # Malmstone Calculator
 <img src="./images/icon.png" alt="Logo" width="120" height="120">
 
+> [!NOTE]
+> AI Assistance used in this plugin falls under the **Hint** level according to the [Dalamud AI Usage Policy](https://dalamud.dev/plugin-publishing/ai-policy/)
+
 A Dalamud plugin that calculates how much more PVP you have to play to reach your target Malmstone Series Level.
 
 ```
